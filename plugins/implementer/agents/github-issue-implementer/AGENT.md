@@ -31,15 +31,23 @@ When working on multiple issues simultaneously, use git worktree to maintain iso
 
 ### Setting Up a Worktree
 
-1. Create a new worktree for the issue:
+1. Ensure the `develop` branch is up to date:
+   ```bash
+   git fetch origin develop
    ```
-   git worktree add ../repo-issue-<number> -b feature/issue-<number>
+
+2. Create a new worktree for the issue based on `develop`:
+   ```bash
+   git worktree add ./.worktrees/issue-<number> -b feature/issue-<number> origin/develop
    ```
-   This creates a new directory `../repo-issue-<number>` with branch `feature/issue-<number>`
+   This creates a new directory `./.worktrees/issue-<number>` with branch `feature/issue-<number>` based on `develop`
 
-2. Navigate to the worktree directory to implement the issue
+3. Navigate to the worktree directory:
+   ```bash
+   cd ./.worktrees/issue-<number>
+   ```
 
-3. Each worktree has its own working directory but shares the same git history
+4. Each worktree has its own working directory but shares the same git history
 
 ### Worktree Management
 
@@ -48,7 +56,7 @@ When working on multiple issues simultaneously, use git worktree to maintain iso
 git worktree list
 
 # Remove a worktree after PR is merged
-git worktree remove ../repo-issue-<number>
+git worktree remove ./.worktrees/issue-<number>
 
 # Prune stale worktree references
 git worktree prune
@@ -59,7 +67,8 @@ git worktree prune
 - **Isolation**: Changes for different issues don't interfere with each other
 - **Parallel work**: Multiple agents can work on different issues simultaneously
 - **Easy context switching**: Each worktree maintains its own state
-- **Clean main branch**: Main worktree stays on main branch for reference
+- **Clean develop branch**: Main worktree stays on develop branch for reference
+- **Consistent base**: All feature branches start from the same develop branch state
 
 ## Workflow Phases
 
@@ -114,21 +123,24 @@ git worktree prune
 
 ### Phase 4: Environment Setup
 
-1. Check if parallel implementation is needed (multiple issues being worked on)
-2. If using worktree for isolation:
+1. Fetch the latest `develop` branch:
    ```bash
-   # Create worktree with feature branch
-   git worktree add ../repo-issue-<number> -b feature/issue-<number>
+   git fetch origin develop
+   ```
+2. Create worktree for isolated development (recommended for parallel work):
+   ```bash
+   # Create worktree with feature branch based on develop
+   git worktree add ./.worktrees/issue-<number> -b feature/issue-<number> origin/develop
 
    # Navigate to worktree
-   cd ../repo-issue-<number>
+   cd ./.worktrees/issue-<number>
    ```
-3. If working in main repository:
+3. Alternative - work directly in main repository:
    ```bash
-   # Create and checkout feature branch
-   git checkout -b feature/issue-<number>
+   # Create and checkout feature branch from develop
+   git checkout -b feature/issue-<number> origin/develop
    ```
-4. Ensure the working directory is clean before starting
+4. Verify the working directory is clean before starting implementation
 
 ### Phase 5: Code Implementation
 
@@ -192,7 +204,13 @@ Before committing, perform a security review of all changes:
    ```
    git push origin <branch-name>
    ```
-4. Create a pull request using the GitHub MCP server:
+
+> **IMPORTANT**: Always specify `base: "develop"` (or `--base develop` for CLI).
+> Never omit the base branch parameter - GitHub will default to `main` if not specified.
+
+4. Create a pull request **targeting the `develop` branch**:
+
+   Using GitHub MCP server (**must include `base: "develop"`**):
    ```
    mcp_github_create_pull_request(
      owner: "[owner]",
@@ -200,9 +218,15 @@ Before committing, perform a security review of all changes:
      title: "<title>",
      body: "<description>\n\nCloses #<issue-number>",
      head: "<branch-name>",
-     base: "main"
+     base: "develop"  # REQUIRED - do not omit
    )
    ```
+
+   Using CLI (**must include `--base develop`**):
+   ```bash
+   gh pr create --base develop --title "<title>" --body "<description>"
+   ```
+
 5. Include in PR description:
    - Summary of changes
    - Link to the issue
@@ -210,18 +234,26 @@ Before committing, perform a security review of all changes:
    - Security considerations (if any)
    - Any notes for reviewers
 
+6. **Verify the PR targets `develop`**:
+   - Check the PR details to confirm base branch is `develop`
+   - If targeting `main`, close the PR and recreate with correct base
+
 ### Phase 9: Cleanup (After PR Merge)
 
-If using a worktree, clean up after the PR is merged:
+After the PR is merged, clean up the development environment:
 
-1. Navigate back to main repository
-2. Remove the worktree:
+1. Navigate back to the main repository root
+2. If using a worktree, remove it:
    ```bash
-   git worktree remove ../repo-issue-<number>
+   git worktree remove ./.worktrees/issue-<number>
    ```
-3. Delete the local branch if no longer needed:
+3. Delete the local feature branch:
    ```bash
    git branch -d feature/issue-<number>
+   ```
+4. Prune any stale worktree references:
+   ```bash
+   git worktree prune
    ```
 
 ## Quality Standards
