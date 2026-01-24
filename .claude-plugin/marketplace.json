@@ -1,16 +1,16 @@
 {
-  "name": "claude-code-for-golang",
+  "name": "claude-code-dev-plugins",
   "owner": {
     "name": "Joonkyo Kim",
     "email": "rootwarp@gmail.com"
   },
   "metadata": {
-    "description": "Go development tools marketplace for Claude Code"
+    "description": "Multi-language development tools marketplace for Claude Code"
   },
   "plugins": [
     {
       "name": "go",
-      "source": "./",
+      "source": "./plugins/go",
       "description": "Go development tools for Claude Code - includes build, test, lint, format, documentation lookup skills and project initialization",
       "version": "0.2.0",
       "author": {
