@@ -11,7 +11,7 @@
     {
       "name": "go",
       "source": "./",
-      "description": "Go development tools for Claude Code - includes build, test, lint, format skills and project initialization",
+      "description": "Go development tools for Claude Code - includes build, test, lint, format, documentation lookup skills and project initialization",
       "version": "0.2.0",
       "author": {
         "name": "rootwarp",
@@ -20,9 +20,9 @@
       "homepage": "https://github.com/rootwarp/claude-code-for-golang",
       "repository": "https://github.com/rootwarp/claude-code-for-golang",
       "license": "MIT",
-      "keywords": ["go", "golang", "development", "build", "test", "lint", "project-init"],
+      "keywords": ["go", "golang", "development", "build", "test", "lint", "project-init", "documentation", "godoc"],
       "category": "development",
-      "tags": ["golang", "go", "tdd", "linting", "formatting", "code-style"]
+      "tags": ["golang", "go", "tdd", "linting", "formatting", "code-style", "documentation", "pkg.go.dev"]
     }
   ]
 }

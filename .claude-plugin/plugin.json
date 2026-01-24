@@ -9,7 +9,7 @@
   },
   "repository": "https://github.com/rootwarp/claude-code-for-golang",
   "license": "MIT",
-  "keywords": ["go", "golang", "development", "build", "test", "lint", "project-init"],
+  "keywords": ["go", "golang", "development", "build", "test", "lint", "project-init", "documentation", "godoc"],
   "commands": "./commands/",
   "skills": "./skills/"
 }
