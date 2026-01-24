@@ -1,0 +1,28 @@
+{
+  "name": "claude-code-for-golang",
+  "owner": {
+    "name": "Joonkyo Kim",
+    "email": "rootwarp@gmail.com"
+  },
+  "metadata": {
+    "description": "Go development tools marketplace for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "claude-code-for-golang",
+      "source": "./",
+      "description": "Go development tools for Claude Code - includes build, test, lint, format skills and project initialization",
+      "version": "0.2.0",
+      "author": {
+        "name": "rootwarp",
+        "email": "rootwarp@gmail.com"
+      },
+      "homepage": "https://github.com/rootwarp/claude-code-for-golang",
+      "repository": "https://github.com/rootwarp/claude-code-for-golang",
+      "license": "MIT",
+      "keywords": ["go", "golang", "development", "build", "test", "lint", "project-init"],
+      "category": "development",
+      "tags": ["golang", "go", "tdd", "linting", "formatting", "code-style"]
+    }
+  ]
+}
