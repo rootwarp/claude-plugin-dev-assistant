@@ -71,6 +71,22 @@
       "keywords": ["planning", "prd", "github", "issues", "task-management", "project-planning", "requirements"],
       "category": "project-management",
       "tags": ["planning", "prd", "github-issues", "task-breakdown", "requirements", "project-management"]
+    },
+    {
+      "name": "implementer",
+      "source": "./plugins/implementer",
+      "description": "End-to-end GitHub issue implementation - from requirements analysis to pull request creation with security review",
+      "version": "0.1.0",
+      "author": {
+        "name": "rootwarp",
+        "email": "rootwarp@gmail.com"
+      },
+      "homepage": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+      "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+      "license": "MIT",
+      "keywords": ["github", "issues", "implementation", "pull-request", "workflow", "security-review"],
+      "category": "project-management",
+      "tags": ["github-issues", "implementation", "pull-request", "workflow", "security", "code-review"]
     }
   ]
 }
