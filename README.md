@@ -1,4 +1,4 @@
-# claude-code-for-golang
+# claude-plugin-dev-assistant
 
 A Claude Code plugin providing Go development tools.
 
@@ -7,13 +7,13 @@ A Claude Code plugin providing Go development tools.
 ### From GitHub
 
 ```bash
-/plugin install rootwarp/claude-code-for-golang
+/plugin install rootwarp/claude-plugin-dev-assistant
 ```
 
 ### Local Development
 
 ```bash
-claude --plugin-dir ./path/to/claude-code-for-golang
+claude --plugin-dir ./path/to/claude-plugin-dev-assistant
 ```
 
 ## Available Commands

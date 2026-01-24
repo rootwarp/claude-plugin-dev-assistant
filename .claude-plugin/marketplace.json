@@ -1,5 +1,5 @@
 {
-  "name": "claude-code-dev-plugins",
+  "name": "claude-plugin-dev-assistant",
   "owner": {
     "name": "Joonkyo Kim",
     "email": "rootwarp@gmail.com"
@@ -17,8 +17,8 @@
         "name": "rootwarp",
         "email": "rootwarp@gmail.com"
       },
-      "homepage": "https://github.com/rootwarp/claude-code-dev-plugins",
-      "repository": "https://github.com/rootwarp/claude-code-dev-plugins",
+      "homepage": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+      "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
       "license": "MIT",
       "keywords": ["go", "golang", "development", "build", "test", "lint", "project-init", "documentation", "godoc"],
       "category": "development",
