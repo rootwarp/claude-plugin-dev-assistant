@@ -25,6 +25,42 @@ This agent uses the GitHub MCP server for all GitHub operations. Available tools
 | `mcp_github_get_pull_request` | Get pull request details |
 | `mcp_github_list_pull_requests` | List pull requests |
 
+## Parallel Implementation with Git Worktree
+
+When working on multiple issues simultaneously, use git worktree to maintain isolated working directories for each issue. This prevents conflicts and allows parallel development.
+
+### Setting Up a Worktree
+
+1. Create a new worktree for the issue:
+   ```
+   git worktree add ../repo-issue-<number> -b feature/issue-<number>
+   ```
+   This creates a new directory `../repo-issue-<number>` with branch `feature/issue-<number>`
+
+2. Navigate to the worktree directory to implement the issue
+
+3. Each worktree has its own working directory but shares the same git history
+
+### Worktree Management
+
+```bash
+# List all worktrees
+git worktree list
+
+# Remove a worktree after PR is merged
+git worktree remove ../repo-issue-<number>
+
+# Prune stale worktree references
+git worktree prune
+```
+
+### Benefits
+
+- **Isolation**: Changes for different issues don't interfere with each other
+- **Parallel work**: Multiple agents can work on different issues simultaneously
+- **Easy context switching**: Each worktree maintains its own state
+- **Clean main branch**: Main worktree stays on main branch for reference
+
 ## Workflow Phases
 
 ### Phase 1: Issue Discovery
@@ -76,7 +112,25 @@ This agent uses the GitHub MCP server for all GitHub operations. Available tools
    ```
 4. Wait for user approval before proceeding
 
-### Phase 4: Code Implementation
+### Phase 4: Environment Setup
+
+1. Check if parallel implementation is needed (multiple issues being worked on)
+2. If using worktree for isolation:
+   ```bash
+   # Create worktree with feature branch
+   git worktree add ../repo-issue-<number> -b feature/issue-<number>
+
+   # Navigate to worktree
+   cd ../repo-issue-<number>
+   ```
+3. If working in main repository:
+   ```bash
+   # Create and checkout feature branch
+   git checkout -b feature/issue-<number>
+   ```
+4. Ensure the working directory is clean before starting
+
+### Phase 5: Code Implementation
 
 1. Follow all project guidelines from CLAUDE.md, project rules, and other configuration files
 2. Read and apply any relevant rules in the project's rules directory
@@ -89,7 +143,7 @@ This agent uses the GitHub MCP server for all GitHub operations. Available tools
 5. Write meaningful comments for complex logic
 6. Create or update tests as appropriate
 
-### Phase 5: Code Review & Iteration
+### Phase 6: Code Review & Iteration
 
 1. After implementation, perform a self-review:
    - Check for code quality issues
@@ -101,7 +155,7 @@ This agent uses the GitHub MCP server for all GitHub operations. Available tools
 4. Iterate until the implementation is solid
 5. Run linting and formatting tools as configured in the project
 
-### Phase 6: Security Review
+### Phase 7: Security Review
 
 Before committing, perform a security review of all changes:
 
@@ -124,7 +178,7 @@ Before committing, perform a security review of all changes:
    - Fix them before proceeding
    - Document any security considerations in the PR
 
-### Phase 7: Git Operations & PR Creation
+### Phase 8: Git Operations & PR Creation
 
 1. Stage changes appropriately:
    ```
@@ -156,15 +210,31 @@ Before committing, perform a security review of all changes:
    - Security considerations (if any)
    - Any notes for reviewers
 
+### Phase 9: Cleanup (After PR Merge)
+
+If using a worktree, clean up after the PR is merged:
+
+1. Navigate back to main repository
+2. Remove the worktree:
+   ```bash
+   git worktree remove ../repo-issue-<number>
+   ```
+3. Delete the local branch if no longer needed:
+   ```bash
+   git branch -d feature/issue-<number>
+   ```
+
 ## Quality Standards
 
 - Never skip the planning phase - it ensures alignment with requirements
 - Always post the plan to GitHub before implementing
 - Follow all project rules and CLAUDE.md guidelines
+- Use git worktree for parallel implementation when working on multiple issues
 - Perform security review before committing
 - Test your changes before committing
 - Write clear, descriptive commit messages
 - Ensure the PR description fully explains the changes
+- Clean up worktrees after PRs are merged
 
 ## Error Handling
 
