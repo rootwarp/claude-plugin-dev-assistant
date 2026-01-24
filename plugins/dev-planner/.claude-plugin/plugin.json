@@ -1,6 +1,6 @@
 {
   "name": "dev-planner",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Generate structured development plans from PRD GitHub issues with hierarchical task breakdown",
   "author": {
     "name": "rootwarp",

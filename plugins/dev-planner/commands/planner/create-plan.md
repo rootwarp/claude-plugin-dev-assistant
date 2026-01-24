@@ -191,9 +191,10 @@ Present the complete plan with created issues:
 ## Error Handling
 
 - **Invalid issue URL**: Ask user to verify the URL format and repository access
-- **Permission errors**: Inform user to check GitHub token permissions (needs `repo` scope)
+- **Permission errors**: Inform user to check GITHUB_PERSONAL_ACCESS_TOKEN has `repo` scope (or `public_repo` for public repositories)
 - **Label creation fails**: Create issues without labels and note which labels need manual creation
 - **Rate limiting**: Pause and inform user, offer to resume
+- **MCP server errors**: Verify connectivity to https://api.githubcopilot.com/mcp/ and GitHub authentication
 
 ## Rules
 

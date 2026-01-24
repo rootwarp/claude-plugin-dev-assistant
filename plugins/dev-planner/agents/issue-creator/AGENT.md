@@ -12,30 +12,81 @@ This agent takes a structured plan from the Plan Analyzer agent and creates all 
 - `prd_issue`: Parent PRD issue number
 - `plan`: Structured plan from Plan Analyzer agent
 
+## GitHub MCP Server Tools
+
+This agent uses the GitHub MCP server for all GitHub operations. Available tools:
+
+| Tool | Description |
+|------|-------------|
+| `mcp_github_get_repository` | Verify repository access |
+| `mcp_github_get_issue` | Get issue details |
+| `mcp_github_create_issue` | Create a new issue |
+| `mcp_github_update_issue` | Update issue title, body, state, labels |
+| `mcp_github_add_issue_comment` | Add a comment to an issue |
+| `mcp_github_list_labels` | List repository labels |
+| `mcp_github_create_label` | Create a new label |
+| `mcp_github_add_sub_issue` | Add a sub-issue to a parent issue |
+| `mcp_github_remove_sub_issue` | Remove a sub-issue from parent |
+| `mcp_github_list_sub_issues` | List all sub-issues of a parent |
+
 ## Process
 
 ### 1. Validate Prerequisites
 
-Before creating issues:
+Before creating issues, use GitHub MCP server tools:
 
-```bash
+```
 # Verify repository access
-gh repo view [repo] --json name
+mcp_github_get_repository(owner: "[owner]", repo: "[repo]")
 
 # Verify PRD issue exists
-gh issue view [prd_issue] --repo [repo] --json number,title
+mcp_github_get_issue(owner: "[owner]", repo: "[repo]", issue_number: [prd_issue])
 
 # Check if required labels exist
-gh label list --repo [repo] --json name
+mcp_github_list_labels(owner: "[owner]", repo: "[repo]")
 ```
 
 Create missing labels if needed:
-```bash
-gh label create "type:section" --repo [repo] --color "0052CC" --description "Parallel work stream"
-gh label create "type:task" --repo [repo] --color "006B75" --description "Individual work item"
-gh label create "complexity:S" --repo [repo] --color "C2E0C6" --description "Small task (1-2 hours)"
-gh label create "complexity:M" --repo [repo] --color "FEF2C0" --description "Medium task (2-4 hours)"
-gh label create "complexity:L" --repo [repo] --color "F9D0C4" --description "Large task (4-8 hours)"
+```
+mcp_github_create_label(
+  owner: "[owner]",
+  repo: "[repo]",
+  name: "type:section",
+  color: "0052CC",
+  description: "Parallel work stream"
+)
+
+mcp_github_create_label(
+  owner: "[owner]",
+  repo: "[repo]",
+  name: "type:task",
+  color: "006B75",
+  description: "Individual work item"
+)
+
+mcp_github_create_label(
+  owner: "[owner]",
+  repo: "[repo]",
+  name: "complexity:S",
+  color: "C2E0C6",
+  description: "Small task (1-2 hours)"
+)
+
+mcp_github_create_label(
+  owner: "[owner]",
+  repo: "[repo]",
+  name: "complexity:M",
+  color: "FEF2C0",
+  description: "Medium task (2-4 hours)"
+)
+
+mcp_github_create_label(
+  owner: "[owner]",
+  repo: "[repo]",
+  name: "complexity:L",
+  color: "F9D0C4",
+  description: "Large task (4-8 hours)"
+)
 ```
 
 ### 2. Create Section Issues
@@ -70,14 +121,19 @@ Dependency order means:
 
 ### 4. Update Section Task Lists
 
-After all tasks are created, update each section issue with the task checklist:
+After all tasks are created, update each section issue with the task checklist using GitHub MCP server:
 
-```bash
+```
 # Get current section body
-gh issue view [section_number] --repo [repo] --json body
+mcp_github_get_issue(owner: "[owner]", repo: "[repo]", issue_number: [section_number])
 
 # Update with task list
-gh issue edit [section_number] --repo [repo] --body "[updated body with task links]"
+mcp_github_update_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [section_number],
+  body: "[updated body with task links]"
+)
 ```
 
 Task list format:
@@ -96,8 +152,13 @@ For cross-section dependencies:
 1. Add comment on dependent task referencing blocking task
 2. Update section dependency information
 
-```bash
-gh issue comment [dependent_task] --repo [repo] --body "Blocked by #[blocking_task] (cross-section dependency)"
+```
+mcp_github_add_issue_comment(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [dependent_task],
+  body: "Blocked by #[blocking_task] (cross-section dependency)"
+)
 ```
 
 ## Output Format
@@ -140,20 +201,30 @@ result:
 
 ### Rate Limiting
 ```
-If rate limited:
+If rate limited (HTTP 429 or rate limit error from MCP):
   1. Log current progress
-  2. Wait for rate limit reset (check X-RateLimit-Reset header)
+  2. Wait for rate limit reset
   3. Resume from last successful creation
   4. Report partial completion if user cancels
 ```
 
 ### Permission Errors
 ```
-If permission denied:
+If permission denied (HTTP 403 or authorization error):
   1. Stop immediately
   2. Report which issues were created
   3. Provide list of remaining issues for manual creation
-  4. Suggest checking token permissions (needs 'repo' scope)
+  4. Suggest checking:
+     - GITHUB_PERSONAL_ACCESS_TOKEN is set correctly
+     - Token has 'repo' scope for private repos or 'public_repo' for public repos
+```
+
+### MCP Server Connection Errors
+```
+If MCP server connection fails:
+  1. Verify connectivity to https://api.githubcopilot.com/mcp/
+  2. Check GitHub authentication (OAuth or PAT)
+  3. Test with: curl -I https://api.githubcopilot.com/mcp/_ping
 ```
 
 ### Label Creation Failures
@@ -166,16 +237,17 @@ If label creation fails:
 
 ### Sub-Issue Linking Failures
 ```
-If sub-issue linking not available:
+If add_sub_issue fails:
   1. Fall back to text references in issue body
   2. Add "Parent: #[number]" to issue body
   3. Note in output that manual linking may be needed
+  4. Check if sub-issues feature is available for the repository
 ```
 
 ### Partial Failures
 ```
 If any issue creation fails:
-  1. Log the failure
+  1. Log the failure with error details from MCP response
   2. Continue with remaining issues
   3. Report partial success with:
      - What was created
@@ -198,8 +270,9 @@ If any issue creation fails:
 ## Guidelines
 
 - Always create issues in dependency order to have valid issue numbers for references
-- Use batch operations where possible to reduce API calls
+- Use MCP tools for all GitHub operations (no direct CLI commands)
 - Provide progress updates during creation
 - Keep detailed log of all created issues for recovery
 - Never leave partial state without reporting it
 - Include direct links to all created issues in final output
+- Use `mcp_github_list_sub_issues` to verify sub-issue relationships after creation

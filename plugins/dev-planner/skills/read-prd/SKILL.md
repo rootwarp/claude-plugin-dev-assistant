@@ -18,11 +18,17 @@ Extract issue number and repository from input:
 
 ### Step 2: Fetch Issue Content
 
-Use the GitHub CLI to fetch the issue:
+Use the GitHub MCP server `get_issue` tool to fetch the issue:
 
-```bash
-gh issue view [issue-number] --repo [owner/repo] --json title,body,labels,state,url
 ```
+mcp_github_get_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [issue-number]
+)
+```
+
+This returns issue details including title, body, labels, state, and URL.
 
 ### Step 3: Parse Issue Content
 
@@ -87,8 +93,9 @@ Return structured data:
 ## Error Handling
 
 - **Issue not found**: Return error message asking user to verify issue number and repository
-- **Access denied**: Inform user that the repository may be private and suggest checking authentication
+- **Access denied**: Inform user that the repository may be private and suggest checking GITHUB_PERSONAL_ACCESS_TOKEN has appropriate scope
 - **Empty body**: Return warning that PRD has no content, ask user to provide requirements directly
+- **MCP server error**: Check connectivity to https://api.githubcopilot.com/mcp/ and GitHub authentication
 
 ## Example
 

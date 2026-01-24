@@ -45,27 +45,34 @@ Format the issue body following @rules/issue-structure.md:
 
 ### Step 2: Create the Issue
 
-Use GitHub CLI to create the issue:
+Use the GitHub MCP server `create_issue` tool to create the issue:
 
-```bash
-gh issue create \
-  --repo [repo] \
-  --title "[title]" \
-  --body "[formatted body]" \
-  --label "type:section"
+```
+mcp_github_create_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  title: "[title]",
+  body: "[formatted body]",
+  labels: ["type:section"]
+)
 ```
 
 If the `type:section` label doesn't exist, create without the label and note this for the user.
 
-### Step 3: Link to PRD
+### Step 3: Link to PRD as Sub-Issue
 
-Add the section as a sub-issue of the PRD:
+Use the GitHub MCP server `add_sub_issue` tool to link the section as a sub-issue of the PRD:
 
-```bash
-gh issue edit [new-issue-number] --repo [repo] --add-sub-issue [prd_issue]
+```
+mcp_github_add_sub_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [prd_issue],
+  sub_issue_id: [new-issue-number]
+)
 ```
 
-Note: If sub-issue linking is not available, add a reference in the issue body instead:
+Note: If sub-issue linking fails, add a reference in the issue body instead:
 "Parent PRD: #[prd_issue]"
 
 ### Step 4: Return Result
@@ -87,9 +94,10 @@ Ready for task creation.
 ## Error Handling
 
 - **Label doesn't exist**: Create issue without label, inform user to create `type:section` label
-- **Permission denied**: Inform user to check repository write access
-- **Sub-issue linking fails**: Fall back to text reference in issue body
+- **Permission denied**: Inform user to check GITHUB_PERSONAL_ACCESS_TOKEN has 'repo' scope
+- **Sub-issue linking fails**: Fall back to text reference in issue body ("Parent PRD: #[prd_issue]")
 - **Rate limited**: Wait and retry, inform user of delay
+- **MCP server error**: Check connectivity to https://api.githubcopilot.com/mcp/ and GitHub authentication
 
 ## Example
 

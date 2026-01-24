@@ -42,28 +42,34 @@ Format the issue body following @rules/issue-structure.md:
 
 ### Step 2: Create the Issue
 
-Use GitHub CLI to create the issue with appropriate labels:
+Use the GitHub MCP server `create_issue` tool to create the issue with appropriate labels:
 
-```bash
-gh issue create \
-  --repo [repo] \
-  --title "[title]" \
-  --body "[formatted body]" \
-  --label "type:task" \
-  --label "complexity:[S|M|L]"
+```
+mcp_github_create_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  title: "[title]",
+  body: "[formatted body]",
+  labels: ["type:task", "complexity:[S|M|L]"]
+)
 ```
 
 If labels don't exist, create without them and note this for the user.
 
-### Step 3: Link to Section
+### Step 3: Link to Section as Sub-Issue
 
-Add the task as a sub-issue of the section:
+Use the GitHub MCP server `add_sub_issue` tool to link the task as a sub-issue of the section:
 
-```bash
-gh issue edit [new-issue-number] --repo [repo] --add-sub-issue [section_issue]
+```
+mcp_github_add_sub_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [section_issue],
+  sub_issue_id: [new-issue-number]
+)
 ```
 
-Note: If sub-issue linking is not available, the "Part of" reference in the body serves as the link.
+Note: If sub-issue linking fails, the "Part of" reference in the body serves as the link.
 
 ### Step 4: Return Result
 
@@ -83,10 +89,11 @@ Output the created issue details:
 ## Error Handling
 
 - **Labels don't exist**: Create issue without labels, list missing labels for user
-- **Permission denied**: Inform user to check repository write access
+- **Permission denied**: Inform user to check GITHUB_PERSONAL_ACCESS_TOKEN has 'repo' scope
 - **Invalid complexity**: Default to M (Medium) and warn user
 - **Blocked-by issue doesn't exist**: Create issue but warn about invalid reference
-- **Sub-issue linking fails**: Fall back to text reference in issue body
+- **Sub-issue linking fails**: Fall back to text reference in issue body ("Part of: #[section_issue]")
+- **MCP server error**: Check connectivity to https://api.githubcopilot.com/mcp/ and GitHub authentication
 
 ## Example
 
