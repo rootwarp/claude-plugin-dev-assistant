@@ -1,0 +1,29 @@
+# Editor
+*.swo
+*.swp
+*.swn
+.idea/
+.vscode/
+*.sublime-*
+
+# macOS
+.DS_Store
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+bin/
+vendor/
+
+# Go coverage
+*.coverprofile
+coverage.out
+coverage.html
+
+# Build
+dist/
