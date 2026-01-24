@@ -10,6 +10,43 @@
   "repository": "https://github.com/rootwarp/claude-code-for-golang",
   "license": "MIT",
   "keywords": ["go", "golang", "development", "build", "test", "lint", "project-init", "documentation", "godoc"],
-  "commands": "../commands/",
-  "skills": "../skills/"
+  "commands": [
+    {
+      "name": "golang:init-dir",
+      "description": "Initialize a standard Go project with directory structure, Makefile, and .gitignore",
+      "path": "../commands/golang/init-dir.md"
+    }
+  ],
+  "skills": [
+    {
+      "name": "go-build",
+      "description": "Build the Go project",
+      "path": "../skills/go-build/SKILL.md"
+    },
+    {
+      "name": "go-doc",
+      "description": "Generate Go documentation",
+      "path": "../skills/go-doc/SKILL.md"
+    },
+    {
+      "name": "go-fmt",
+      "description": "Format Go code",
+      "path": "../skills/go-fmt/SKILL.md"
+    },
+    {
+      "name": "go-lint",
+      "description": "Run Go linter",
+      "path": "../skills/go-lint/SKILL.md"
+    },
+    {
+      "name": "go-mod",
+      "description": "Manage Go modules",
+      "path": "../skills/go-mod/SKILL.md"
+    },
+    {
+      "name": "go-test",
+      "description": "Run Go tests",
+      "path": "../skills/go-test/SKILL.md"
+    }
+  ]
 }
