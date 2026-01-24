@@ -1,0 +1,13 @@
+{
+  "name": "python",
+  "version": "0.1.0",
+  "description": "Python development tools for Claude Code",
+  "author": {
+    "name": "rootwarp",
+    "email": "rootwarp@gmail.com",
+    "url": "https://github.com/rootwarp"
+  },
+  "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+  "license": "MIT",
+  "keywords": ["python", "development", "pytest", "ruff", "mypy", "uv", "poetry", "typing", "documentation"]
+}
