@@ -1,0 +1,13 @@
+{
+  "name": "rust",
+  "version": "0.1.0",
+  "description": "Rust development tools for Claude Code",
+  "author": {
+    "name": "rootwarp",
+    "email": "rootwarp@gmail.com",
+    "url": "https://github.com/rootwarp"
+  },
+  "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+  "license": "MIT",
+  "keywords": ["rust", "rustlang", "cargo", "development", "build", "test", "clippy", "rustfmt", "documentation"]
+}
