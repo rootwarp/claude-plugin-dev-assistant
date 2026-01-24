@@ -17,8 +17,8 @@
         "name": "rootwarp",
         "email": "rootwarp@gmail.com"
       },
-      "homepage": "https://github.com/rootwarp/claude-code-for-golang",
-      "repository": "https://github.com/rootwarp/claude-code-for-golang",
+      "homepage": "https://github.com/rootwarp/claude-code-dev-plugins",
+      "repository": "https://github.com/rootwarp/claude-code-dev-plugins",
       "license": "MIT",
       "keywords": ["go", "golang", "development", "build", "test", "lint", "project-init", "documentation", "godoc"],
       "category": "development",
