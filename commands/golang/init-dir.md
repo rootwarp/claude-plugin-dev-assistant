@@ -181,7 +181,57 @@ tmp/
 *.log
 ```
 
-### Step 7: Display Result
+### Step 7: Write .golangci.yml
+
+Create `.golangci.yml` with a balanced linter configuration (replace `<module-name>` with the actual module name):
+
+```yaml
+run:
+  timeout: 5m
+
+linters:
+  enable:
+    - errcheck
+    - govet
+    - staticcheck
+    - gosimple
+    - ineffassign
+    - unused
+    - typecheck
+    - gofmt
+    - goimports
+    - errorlint
+    - gosec
+    - revive
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+  govet:
+    enable-all: true
+  staticcheck:
+    checks: ["all"]
+  goimports:
+    local-prefixes: <module-name>
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+```
+
+**Linter rationale:**
+- `errcheck`: Catches unchecked errors (aligns with error handling rules)
+- `govet`: Detects suspicious constructs
+- `staticcheck`: Comprehensive static analysis
+- `gosimple/ineffassign/unused`: Identifies dead or unused code
+- `typecheck`: Validates type correctness
+- `gofmt/goimports`: Enforces formatting standards
+- `errorlint`: Ensures proper error wrapping with `%w`
+- `gosec`: Catches security issues
+- `revive`: Extensible linter with sensible defaults (golint replacement)
+
+### Step 8: Display Result
 
 Show the created structure using `tree` or `ls -la` and confirm completion.
 
