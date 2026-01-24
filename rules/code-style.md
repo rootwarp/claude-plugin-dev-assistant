@@ -22,6 +22,7 @@ Follow [Effective Go](https://go.dev/doc/effective_go), [Google Go Style Guide](
 - Prefer fewer, larger packages over many small ones
 - Use `internal/` for implementation details
 - Group code logically; one concept per file is not required
+- Implement functions by invokation order if possible
 
 ## Interfaces
 
