@@ -1,53 +1,66 @@
 # claude-plugin-dev-assistant
 
-A Claude Code plugin providing Go development tools.
+A collection of Claude Code plugins for Go, Rust, and Python development.
 
 ## Installation
 
 ### From GitHub
 
 ```bash
-/plugin install rootwarp/claude-plugin-dev-assistant
+# Install specific plugin
+/plugin install rootwarp/claude-plugin-dev-assistant/plugins/go
+/plugin install rootwarp/claude-plugin-dev-assistant/plugins/rust
+/plugin install rootwarp/claude-plugin-dev-assistant/plugins/python
 ```
 
 ### Local Development
 
 ```bash
-claude --plugin-dir ./path/to/claude-plugin-dev-assistant
+claude --plugin-dir ./plugins/go
+claude --plugin-dir ./plugins/rust
+claude --plugin-dir ./plugins/python
 ```
 
-## Available Commands
+## Available Plugins
 
-| Command | Description |
-|---------|-------------|
+### Go Plugin
+
+| Command/Skill | Description |
+|---------------|-------------|
 | `/golang:init-dir` | Initialize Go project with directories, Makefile, and .gitignore |
-
-## Available Skills
-
-| Skill | Description |
-|-------|-------------|
 | `/go-build` | Build the Go project |
 | `/go-test` | Run tests with coverage |
 | `/go-lint` | Run linters (golangci-lint or go vet) |
 | `/go-mod` | Tidy Go modules |
 | `/go-fmt` | Format Go source files |
+| `/go-doc` | Look up Go documentation |
 
-## Usage
+### Rust Plugin
 
-After installation, use the commands and skills in Claude Code:
+| Command/Skill | Description |
+|---------------|-------------|
+| `/rust:init-dir` | Initialize Rust project with Cargo configuration |
+| `/cargo-build` | Build the Rust project |
+| `/cargo-test` | Run tests |
+| `/cargo-clippy` | Run Clippy linter |
+| `/cargo-fmt` | Format Rust source files |
+| `/cargo-check` | Fast type checking without building |
+| `/cargo-doc` | Generate and view documentation |
 
-```
-/golang:init-dir
-/go-build
-/go-test
-/go-lint
-/go-mod
-/go-fmt
-```
+### Python Plugin
+
+| Command/Skill | Description |
+|---------------|-------------|
+| `/python:init-dir` | Initialize Python project with uv and modern tooling |
+| `/pytest` | Run tests with pytest |
+| `/ruff` | Run Ruff linter and formatter |
+| `/mypy` | Run type checking |
+| `/uv` | Manage dependencies with uv |
+| `/python-doc` | Look up Python documentation |
 
 ## MCP Servers
 
-This plugin includes a GitHub MCP server for enhanced GitHub integration.
+Each plugin includes a GitHub MCP server for enhanced GitHub integration.
 
 ### Setup
 
@@ -57,11 +70,8 @@ Set your GitHub Personal Access Token:
 export GITHUB_PERSONAL_ACCESS_TOKEN=your_token_here
 ```
 
-Or add it to your `.mcp.json` (not recommended for shared repos).
-
 ### Capabilities
 
-The GitHub MCP server provides:
 - Repository search and browsing
 - Issue and PR management
 - File content retrieval
@@ -69,58 +79,66 @@ The GitHub MCP server provides:
 
 ## LSP Configuration
 
-This plugin includes `gopls` (Go language server) configuration with:
+Each plugin includes language-specific LSP configuration:
 
-- **staticcheck** - Advanced static analysis
-- **gofumpt** - Stricter formatting than gofmt
-- **Analyses** - unusedparams, shadow, nilness, unusedwrite
-- **Hints** - Variable types, parameter names, constant values
+| Plugin | LSP Server | Features |
+|--------|------------|----------|
+| Go | `gopls` | staticcheck, gofumpt, inlay hints |
+| Rust | `rust-analyzer` | clippy on save, proc macros, inlay hints |
+| Python | `pyright` | strict type checking, inlay hints |
 
-Requires `gopls` installed:
+### LSP Installation
+
 ```bash
+# Go
 go install golang.org/x/tools/gopls@latest
+
+# Rust
+rustup component add rust-analyzer
+
+# Python
+uv add --dev pyright
+# or: npm install -g pyright
 ```
 
 ## Rules
 
-This plugin includes `CLAUDE.md` with rules for:
+Each plugin includes `CLAUDE.md` with language-specific rules:
 
-- **Code Style** - Effective Go guidelines, formatting, naming conventions
-- **Project Layout** - Standard directory structure based on golang-standards/project-layout
-- **TDD** - Test-Driven Development workflow (Red-Green-Refactor)
-- **Security** - Input validation, secrets management, secure coding practices
+- **Code Style** - Language conventions, formatting, naming
+- **Project Layout** - Standard directory structure
+- **TDD** - Test-Driven Development workflow
+- **Security** - Input validation, secrets management
+- **Architecture** - SOLID principles, Clean Architecture
 
 ## Plugin Structure
 
 ```
-.
-├── .claude-plugin/
-│   └── plugin.json      # Plugin manifest
-├── .lsp.json            # LSP server config (gopls)
-├── .mcp.json            # MCP server config
-├── commands/            # Custom commands
-│   └── golang/
-│       └── init-dir.md
-├── rules/               # Modular rules
-│   ├── code-style.md
-│   ├── project-layout.md
-│   ├── tdd.md
-│   └── security.md
-├── skills/
-│   ├── go-build/
-│   │   └── SKILL.md
-│   ├── go-fmt/
-│   │   └── SKILL.md
-│   ├── go-lint/
-│   │   └── SKILL.md
-│   ├── go-mod/
-│   │   └── SKILL.md
-│   └── go-test/
-│       └── SKILL.md
-├── CHANGELOG.md
-├── CLAUDE.md            # Imports rules/*
-├── LICENSE
-└── README.md
+plugins/
+├── go/
+│   ├── .claude-plugin/plugin.json
+│   ├── .lsp.json              # gopls config
+│   ├── .mcp.json              # GitHub MCP
+│   ├── CLAUDE.md
+│   ├── commands/golang/
+│   ├── rules/
+│   └── skills/
+├── rust/
+│   ├── .claude-plugin/plugin.json
+│   ├── .lsp.json              # rust-analyzer config
+│   ├── .mcp.json              # GitHub MCP
+│   ├── CLAUDE.md
+│   ├── commands/rust/
+│   ├── rules/
+│   └── skills/
+└── python/
+    ├── .claude-plugin/plugin.json
+    ├── .lsp.json              # pyright config
+    ├── .mcp.json              # GitHub MCP
+    ├── CLAUDE.md
+    ├── commands/python/
+    ├── rules/
+    └── skills/
 ```
 
 ## License
