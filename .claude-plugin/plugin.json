@@ -1,5 +1,5 @@
 {
-  "name": "claude-code-for-golang",
+  "name": "go",
   "version": "0.2.0",
   "description": "Go development tools for Claude Code",
   "author": {
