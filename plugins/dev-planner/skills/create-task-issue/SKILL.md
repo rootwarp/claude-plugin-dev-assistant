@@ -65,11 +65,36 @@ mcp_github_add_sub_issue(
   owner: "[owner]",
   repo: "[repo]",
   issue_number: [section_issue],
-  sub_issue_id: [new-issue-number]
+  sub_issue_id: [new-issue-number],
+  replace_parent: false
 )
 ```
 
-Note: If sub-issue linking fails, the "Part of" reference in the body serves as the link.
+**Parameters:**
+- `issue_number`: The parent section issue number (from `number` field, NOT `id`)
+- `sub_issue_id`: The newly created task issue number (from `number` field, NOT `id`)
+- `replace_parent`: Set to `true` if moving an existing task to a different section
+
+**Warning:** Use the `number` field from the create_issue response, not the `id` field. Using `id` (like 3850680229) will cause 404 errors.
+
+**Fallback:** If sub-issue linking fails, the "Part of" reference in the body serves as the link.
+
+### Step 3b: Reorder Tasks (Optional)
+
+If tasks need to be displayed in a specific order within the section, use reprioritize:
+
+```
+mcp_github_reprioritize_sub_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [section_issue],
+  sub_issue_id: [task-to-move],
+  after_id: [task-number]    # Place after this task
+  # OR: before_id: [task-number]  # Place before this task
+)
+```
+
+This is useful when tasks are created out of order but should appear in dependency sequence.
 
 ### Step 4: Return Result
 

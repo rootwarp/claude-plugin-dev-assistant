@@ -28,6 +28,61 @@ This agent uses the GitHub MCP server for all GitHub operations. Available tools
 | `mcp_github_add_sub_issue` | Add a sub-issue to a parent issue |
 | `mcp_github_remove_sub_issue` | Remove a sub-issue from parent |
 | `mcp_github_list_sub_issues` | List all sub-issues of a parent |
+| `mcp_github_get_parent_issue` | Get the parent issue of a sub-issue |
+| `mcp_github_reprioritize_sub_issue` | Change the order of sub-issues |
+
+### Sub-Issue Tool Details
+
+**mcp_github_add_sub_issue:**
+```
+mcp_github_add_sub_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [parent_issue],    # The parent issue number
+  sub_issue_id: [child_issue],     # The issue to add as sub-issue
+  replace_parent: false            # Set true to re-parent if already has parent
+)
+```
+
+**mcp_github_reprioritize_sub_issue:**
+```
+mcp_github_reprioritize_sub_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [parent_issue],
+  sub_issue_id: [issue_to_move],
+  after_id: [issue_number]         # Place after this issue (OR use before_id)
+  # OR: before_id: [issue_number]  # Place before this issue
+)
+```
+
+**mcp_github_get_parent_issue:**
+```
+mcp_github_get_parent_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [child_issue]      # Returns the parent issue if exists
+)
+```
+
+### Important: Issue Number vs Node ID
+
+When calling sub-issue tools, **always use the issue `number`, not the `id`**:
+
+| Field | Example | Use for sub_issue_id? |
+|-------|---------|----------------------|
+| `number` | 7 | YES - Use this |
+| `id` | 3850680229 | NO - Causes 404 |
+
+When `mcp_github_create_issue` returns a response, extract the `number` field:
+```json
+{
+  "id": 3850680229,      // DO NOT use this
+  "number": 7,           // USE THIS for sub_issue_id
+  "title": "...",
+  ...
+}
+```
 
 ## Process
 
@@ -145,7 +200,28 @@ Task list format:
 - [ ] #106 - Add database migrations (S) - blocked by #105
 ```
 
-### 5. Handle Cross-Section Dependencies
+### 5. Order Sub-Issues (Optional)
+
+If tasks should appear in a specific order (e.g., dependency order), use reprioritize after all tasks are created:
+
+```
+# Get current sub-issue order
+mcp_github_list_sub_issues(owner: "[owner]", repo: "[repo]", issue_number: [section])
+
+# Reorder tasks to match dependency sequence
+For each task that needs repositioning:
+  mcp_github_reprioritize_sub_issue(
+    owner: "[owner]",
+    repo: "[repo]",
+    issue_number: [section],
+    sub_issue_id: [task_to_move],
+    after_id: [preceding_task]  # or before_id: [following_task]
+  )
+```
+
+This ensures sub-issues appear in logical order (blocked tasks after their blockers).
+
+### 6. Handle Cross-Section Dependencies
 
 For cross-section dependencies:
 
@@ -238,10 +314,40 @@ If label creation fails:
 ### Sub-Issue Linking Failures
 ```
 If add_sub_issue fails:
-  1. Fall back to text references in issue body
-  2. Add "Parent: #[number]" to issue body
-  3. Note in output that manual linking may be needed
-  4. Check if sub-issues feature is available for the repository
+  1. Check error type:
+     - "404 Not Found": Likely using node `id` instead of issue `number`
+     - "already has a parent": Use replace_parent=true if re-parenting is intended
+     - "sub-issues not available": Feature may not be enabled for repository
+     - "rate limited": Wait and retry (rapid content creation triggers secondary limits)
+  2. Fall back to text references in issue body
+  3. Add "Parent: #[number]" to issue body
+  4. Note in output that manual linking may be needed
+
+Common issues:
+  - Issue already has parent: Must use replace_parent=true or remove first
+  - Rate limiting: Creating content quickly triggers secondary rate limits
+  - Repository feature: Sub-issues may not be available for all repositories
+```
+
+### Re-parenting Issues
+```
+If an issue needs to move to a different parent:
+  Option 1 - Replace parent directly:
+    mcp_github_add_sub_issue(
+      issue_number: [new_parent],
+      sub_issue_id: [issue],
+      replace_parent: true
+    )
+
+  Option 2 - Remove then add:
+    mcp_github_remove_sub_issue(
+      issue_number: [old_parent],
+      sub_issue_id: [issue]
+    )
+    mcp_github_add_sub_issue(
+      issue_number: [new_parent],
+      sub_issue_id: [issue]
+    )
 ```
 
 ### Partial Failures
@@ -264,8 +370,9 @@ If any issue creation fails:
    - Tasks with no dependencies first
    - Then tasks dependent on created tasks
 5. Update section issues with task lists
-6. Add cross-section dependency comments
-7. Generate summary report
+6. Order sub-issues within each section (optional, for display order)
+7. Add cross-section dependency comments
+8. Generate summary report
 
 ## Guidelines
 

@@ -85,15 +85,46 @@ PRD Issue (type:prd)
 
 ### Parent-Child Relationships
 
-Use GitHub's sub-issue feature to establish hierarchy:
+Use GitHub's sub-issue feature to establish hierarchy via the REST API or MCP tools:
 
-```bash
-# Link section to PRD
-gh issue edit [section-number] --add-sub-issue [prd-number]
-
-# Link task to section
-gh issue edit [task-number] --add-sub-issue [section-number]
+**MCP Server Tools:**
 ```
+# Link section as sub-issue of PRD
+mcp_github_add_sub_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [prd-number],      # parent issue
+  sub_issue_id: [section-number]   # child issue to add
+)
+
+# Link task as sub-issue of section
+mcp_github_add_sub_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [section-number],  # parent issue
+  sub_issue_id: [task-number]      # child issue to add
+)
+```
+
+**REST API Endpoints:**
+```
+# Add sub-issue: POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues
+# Body: { "sub_issue_id": [child-issue-number], "replace_parent": false }
+
+# List sub-issues: GET /repos/{owner}/{repo}/issues/{issue_number}/sub_issues
+
+# Get parent: GET /repos/{owner}/{repo}/issues/{issue_number}/parent
+
+# Remove sub-issue: DELETE /repos/{owner}/{repo}/issues/{issue_number}/sub_issue
+# Body: { "sub_issue_id": [child-issue-number] }
+
+# Reprioritize: PATCH /repos/{owner}/{repo}/issues/{issue_number}/sub_issues/priority
+# Body: { "sub_issue_id": [id], "after_id": [id] } or { "sub_issue_id": [id], "before_id": [id] }
+```
+
+**Critical:** The `sub_issue_id` parameter expects the issue `number` (e.g., 7), not the internal `id` (e.g., 3850680229). Using the wrong ID type causes 404 errors.
+
+**Note:** If an issue already has a parent and you want to move it to a new parent, use `replace_parent: true` in the add sub-issue request.
 
 ### Sequential Dependencies
 

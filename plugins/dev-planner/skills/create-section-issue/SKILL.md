@@ -68,12 +68,40 @@ mcp_github_add_sub_issue(
   owner: "[owner]",
   repo: "[repo]",
   issue_number: [prd_issue],
-  sub_issue_id: [new-issue-number]
+  sub_issue_id: [new-issue-number],
+  replace_parent: false
 )
 ```
 
-Note: If sub-issue linking fails, add a reference in the issue body instead:
+**Parameters:**
+- `issue_number`: The parent PRD issue number (from `number` field, NOT `id`)
+- `sub_issue_id`: The newly created section issue number (from `number` field, NOT `id`)
+- `replace_parent`: Set to `true` if re-parenting an existing issue to a new PRD
+
+**Warning:** Use the `number` field from the create_issue response, not the `id` field. Using `id` (like 3850680229) will cause 404 errors.
+
+**Fallback:** If sub-issue linking fails, add a reference in the issue body instead:
 "Parent PRD: #[prd_issue]"
+
+### Step 3b: Verify Sub-Issue Relationship (Optional)
+
+After linking, optionally verify the relationship:
+
+```
+# List sub-issues to confirm
+mcp_github_list_sub_issues(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [prd_issue]
+)
+
+# Or verify parent from child's perspective
+mcp_github_get_parent_issue(
+  owner: "[owner]",
+  repo: "[repo]",
+  issue_number: [new-issue-number]
+)
+```
 
 ### Step 4: Return Result
 
