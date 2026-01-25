@@ -23,9 +23,9 @@ PRD Issue (type:prd)
 - `type:task` - Individual work item
 
 ### Complexity Labels (for tasks)
-- `complexity:S` - Small (1-2 hours)
-- `complexity:M` - Medium (2-4 hours)
-- `complexity:L` - Large (4-8 hours)
+- `complexity:S` - Small (1-2 hours, ~50-150 lines)
+- `complexity:M` - Medium (2-4 hours, ~150-300 lines)
+- `complexity:L` - Large (4-8 hours, ~300-400 lines max)
 
 ### Optional Labels
 - `priority:high` - Should be worked on first

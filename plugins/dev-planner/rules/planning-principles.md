@@ -38,13 +38,37 @@ Mark these explicitly with `blocked-by` relationships.
 
 ## Task Sizing
 
-Keep tasks small and atomic:
+Keep tasks small and atomic to enable effective code review:
 
-- **Small (S)**: 1-2 hours - Single function, simple component, config change
-- **Medium (M)**: 2-4 hours - Feature slice, integration, refactoring
-- **Large (L)**: 4-8 hours - Complex feature, significant refactoring
+### Size Guidelines
 
-If a task exceeds 8 hours, break it down further.
+- **Small (S)**: 1-2 hours - Single function, simple component, config change (~50-150 lines)
+- **Medium (M)**: 2-4 hours - Feature slice, integration, refactoring (~150-300 lines)
+- **Large (L)**: 4-8 hours - Complex feature, significant refactoring (~300-400 lines)
+
+If a task exceeds 8 hours or 400 lines of changes, break it down further.
+
+### PR Size for Effective Review
+
+Aim for **200-400 lines of changed code** per PR. Beyond 400 lines, review quality drops significantly—studies show reviewers miss more bugs as size increases.
+
+**Each task should result in a PR that:**
+- Contains **one logical change** — a single feature, bug fix, or refactor
+- Takes **under 30 minutes to review** — if longer, the task is too large
+- Is **self-contained** — builds and passes tests independently
+
+### When Larger PRs Are Acceptable
+
+- Automated refactors (renames, formatting)
+- Generated code or dependency updates
+- Initial project scaffolding
+
+### Signs a Task Is Too Large
+
+- Difficult to write a concise commit message
+- Multiple unrelated files changed
+- The diff requires context-switching between features
+- Reviewer needs significant time to understand the changes
 
 ## Acceptance Criteria
 
