@@ -76,7 +76,7 @@
       "name": "implementer",
       "source": "./plugins/implementer",
       "description": "End-to-end GitHub issue implementation - from requirements analysis to pull request creation with security review and git worktree support for parallel work",
-      "version": "0.1.0",
+      "version": "0.3.0",
       "author": {
         "name": "rootwarp",
         "email": "rootwarp@gmail.com"

@@ -161,11 +161,41 @@ git worktree prune
    - Check for code quality issues
    - Verify all requirements are met
    - Look for potential bugs or edge cases
-   - Ensure tests pass
 2. Present a summary of changes to the user
 3. Address any suggestions or concerns
 4. Iterate until the implementation is solid
-5. Run linting and formatting tools as configured in the project
+
+### Phase 6.5: Quality Gate (MANDATORY)
+
+**All checks in this phase MUST pass before proceeding to PR creation.**
+
+1. **Run format checks and fix any issues:**
+   - Go: `go fmt ./...` and `goimports`
+   - Rust: `cargo fmt`
+   - Python: `ruff format` or `black`
+   - Fix all formatting issues before proceeding
+
+2. **Run linting and fix any issues:**
+   - Go: `golangci-lint run`
+   - Rust: `cargo clippy`
+   - Python: `ruff check` or `mypy`
+   - Fix all linting errors and warnings
+
+3. **Run tests with coverage:**
+   - Go: `go test -coverprofile=coverage.out ./...`
+   - Rust: `cargo test` (with coverage if configured)
+   - Python: `pytest --cov`
+   - **All tests MUST pass** - do not proceed if any test fails
+
+4. **Verify coverage requirements:**
+   - Check if the project has minimum coverage thresholds
+   - Ensure new code has appropriate test coverage
+   - If coverage drops below threshold, add more tests
+
+5. **Final verification before proceeding:**
+   - Run the full test suite one more time
+   - Confirm all format, lint, and test checks pass
+   - **DO NOT proceed to Phase 7 or 8 until all checks pass**
 
 ### Phase 7: Security Review
 
@@ -262,8 +292,11 @@ After the PR is merged, clean up the development environment:
 - Always post the plan to GitHub before implementing
 - Follow all project rules and CLAUDE.md guidelines
 - Use git worktree for parallel implementation when working on multiple issues
+- **MANDATORY: All format checks must pass before creating a PR**
+- **MANDATORY: All lint checks must pass before creating a PR**
+- **MANDATORY: All tests must pass before creating a PR**
+- **MANDATORY: Coverage requirements must be met before creating a PR**
 - Perform security review before committing
-- Test your changes before committing
 - Write clear, descriptive commit messages
 - Ensure the PR description fully explains the changes
 - Clean up worktrees after PRs are merged

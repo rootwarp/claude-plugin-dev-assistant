@@ -1,0 +1,13 @@
+{
+  "name": "implementer",
+  "version": "0.3.0",
+  "description": "End-to-end GitHub issue implementation workflow with security review and parallel implementation support",
+  "author": {
+    "name": "rootwarp",
+    "email": "rootwarp@gmail.com",
+    "url": "https://github.com/rootwarp"
+  },
+  "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+  "license": "MIT",
+  "keywords": ["github", "issues", "implementation", "pull-request", "workflow", "git-worktree", "security-review"]
+}
