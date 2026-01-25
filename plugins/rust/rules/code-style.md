@@ -113,11 +113,7 @@ fn normalize(input: &str) -> Cow<'_, str> {
 
 ## Concurrency
 
-- Prefer message passing (`mpsc`, `crossbeam`) over shared state
-- Use `Arc<Mutex<T>>` only when necessary
-- Avoid holding locks across `.await` points
-- Use `tokio::sync` primitives for async code
-- Mark thread-safe types with `Send` and `Sync`
+See `concurrency.md` for comprehensive coverage of Send/Sync traits, shared state patterns, message passing, async considerations, and deadlock prevention.
 
 ## Performance
 

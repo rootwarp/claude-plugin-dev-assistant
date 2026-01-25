@@ -44,10 +44,7 @@ Follow [Effective Go](https://go.dev/doc/effective_go), [Google Go Style Guide](
 
 ## Concurrency
 
-- Never start a goroutine without knowing when it stops
-- Prefer unbuffered or size-1 channels
-- Copy slices/maps at boundaries to prevent data races
-- Use `sync.Mutex` zero value; embed as non-pointer field
+See `concurrency.md` for comprehensive race condition prevention, goroutine lifecycle management, channel patterns, and sync primitives.
 
 ## Performance
 

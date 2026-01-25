@@ -141,21 +141,9 @@ def add_item(item: str, items: list[str] | None = None) -> list[str]:
     return items
 ```
 
-## Async Code
+## Concurrency
 
-- Use `async`/`await` consistently; don't mix sync and async
-- Prefer `asyncio.TaskGroup` over `gather` (Python 3.11+)
-- Use `async with` for async context managers
-- Avoid blocking calls in async functions
-
-```python
-import asyncio
-
-async def fetch_all(urls: list[str]) -> list[Response]:
-    async with asyncio.TaskGroup() as tg:
-        tasks = [tg.create_task(fetch(url)) for url in urls]
-    return [task.result() for task in tasks]
-```
+See `concurrency.md` for comprehensive coverage of GIL implications, threading primitives, asyncio race conditions, concurrent.futures patterns, and thread-safe data structures.
 
 ## Comments & Documentation
 
