@@ -35,6 +35,36 @@ claude --plugin-dir ./plugins/python
 | `/go-fmt` | Format Go source files |
 | `/go-doc` | Look up Go documentation |
 
+<details>
+<summary>Usage Examples</summary>
+
+```bash
+# Initialize a new Go project (interactive)
+/golang:init-dir
+
+# Build the project
+/go-build
+
+# Run tests with verbose output and coverage
+/go-test
+
+# Run linters (uses golangci-lint if available, otherwise go vet)
+/go-lint
+
+# Format code with goimports
+/go-fmt
+
+# Tidy module dependencies
+/go-mod
+
+# Look up standard library documentation
+/go-doc fmt
+/go-doc net/http
+/go-doc encoding/json Marshal
+```
+
+</details>
+
 ### Rust Plugin
 
 | Command/Skill | Description |
@@ -47,6 +77,45 @@ claude --plugin-dir ./plugins/python
 | `/cargo-check` | Fast type checking without building |
 | `/cargo-doc` | Generate and view documentation |
 
+<details>
+<summary>Usage Examples</summary>
+
+```bash
+# Initialize a new Rust project (interactive)
+/rust:init-dir
+
+# Build the project (debug mode)
+/cargo-build
+
+# Build for release
+/cargo-build --release
+
+# Quick syntax and type check (faster than build)
+/cargo-check
+
+# Run all tests
+/cargo-test
+
+# Run specific test with output
+/cargo-test test_name -- --nocapture
+
+# Run Clippy linter
+/cargo-clippy
+
+# Run Clippy with strict mode (treat warnings as errors)
+/cargo-clippy -- -D warnings
+
+# Format code
+/cargo-fmt
+
+# Look up crate documentation
+/cargo-doc tokio
+/cargo-doc serde 1.0.0
+/cargo-doc axum Router
+```
+
+</details>
+
 ### Python Plugin
 
 | Command/Skill | Description |
@@ -57,6 +126,53 @@ claude --plugin-dir ./plugins/python
 | `/mypy` | Run type checking |
 | `/uv` | Manage dependencies with uv |
 | `/python-doc` | Look up Python documentation |
+
+<details>
+<summary>Usage Examples</summary>
+
+```bash
+# Initialize a new Python project (interactive)
+/python:init-dir
+
+# Run tests
+/pytest
+
+# Run tests with coverage
+/pytest --cov=mypackage --cov-report=html
+
+# Run specific test file or function
+/pytest tests/test_main.py
+/pytest tests/test_main.py::test_function_name
+
+# Run Ruff linter with auto-fix
+/ruff check --fix .
+
+# Format code with Ruff
+/ruff format .
+
+# Run type checking
+/mypy src/
+
+# Run strict type checking
+/mypy --strict src/
+
+# Add dependencies
+/uv add fastapi httpx
+/uv add --dev pytest-cov mypy
+
+# Remove a dependency
+/uv remove httpx
+
+# Sync dependencies from lock file
+/uv sync
+
+# Look up documentation
+/python-doc asyncio
+/python-doc collections Counter
+/python-doc requests 3.11
+```
+
+</details>
 
 ## MCP Servers
 
