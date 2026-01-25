@@ -11,7 +11,23 @@
 - Use `tests/` directory for integration tests
 - Mock external dependencies using traits and test doubles
 - Aim for meaningful coverage, not 100% coverage
-- Run tests before committing: `cargo test`
+
+## MANDATORY: Before Every Commit
+
+**Run these commands and ensure they all pass before committing:**
+
+```bash
+# 1. Format code
+cargo fmt --all
+
+# 2. Check lints (must have zero warnings)
+cargo clippy --all-targets --all-features -- -D warnings
+
+# 3. Run all tests (must all pass)
+cargo test --all-features
+```
+
+**Do NOT commit if any of these fail. Fix the issues first.**
 
 ## Test Organization
 

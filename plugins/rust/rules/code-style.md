@@ -158,12 +158,59 @@ pub fn parse_config(path: &str) -> Result<Config, ConfigError> {
 
 ---
 
+## MANDATORY: Quality Gate Before Commits
+
+**These steps MUST be run and pass before any commit or PR. Do NOT skip these steps.**
+
+### 1. Format Code (REQUIRED)
+
+```bash
+cargo fmt --all
+```
+
+- Run this after every code change
+- Fix any formatting issues before proceeding
+- Never commit unformatted code
+
+### 2. Run Clippy Lints (REQUIRED)
+
+```bash
+cargo clippy --all-targets --all-features -- -D warnings
+```
+
+- All warnings must be resolved (not suppressed without justification)
+- Address each lint, don't just `#[allow(...)]` them
+- If a lint must be suppressed, add a comment explaining why
+
+### 3. Run Tests (REQUIRED)
+
+```bash
+cargo test --all-features
+```
+
+- All tests must pass
+- Do NOT proceed if any test fails
+- Add tests for new functionality
+
+### 4. Verify Before Commit
+
+Run all checks together:
+
+```bash
+cargo fmt --all --check && cargo clippy --all-targets --all-features -- -D warnings && cargo test --all-features
+```
+
+**If any of these commands fail, fix the issues before committing.**
+
+---
+
 ## Pre-Review Checklist
 
 Before submitting code for review, verify:
 
-- [ ] `cargo fmt` applied
-- [ ] `cargo clippy` passes with no warnings
+- [ ] `cargo fmt --all` applied - **code is formatted**
+- [ ] `cargo clippy` passes with **zero warnings**
+- [ ] `cargo test` passes with **all tests green**
 - [ ] No `.unwrap()` or `.expect()` in library code
 - [ ] All public items have documentation
 - [ ] Errors include meaningful context
