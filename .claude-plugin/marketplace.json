@@ -28,7 +28,7 @@
       "name": "rust",
       "source": "./plugins/rust",
       "description": "Rust development tools for Claude Code - includes cargo build, test, clippy, rustfmt, documentation skills and project initialization",
-      "version": "0.1.0",
+      "version": "0.3.0",
       "author": {
         "name": "rootwarp",
         "email": "rootwarp@gmail.com"
@@ -60,7 +60,7 @@
       "name": "dev-planner",
       "source": "./plugins/dev-planner",
       "description": "Generate structured development plans from PRD GitHub issues - breaks requirements into parallel sections and sequential tasks with GitHub issue hierarchy",
-      "version": "0.1.0",
+      "version": "0.3.0",
       "author": {
         "name": "rootwarp",
         "email": "rootwarp@gmail.com"
