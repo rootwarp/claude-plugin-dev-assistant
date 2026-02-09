@@ -87,6 +87,22 @@
       "keywords": ["github", "issues", "implementation", "pull-request", "workflow", "security-review", "git-worktree", "parallel"],
       "category": "project-management",
       "tags": ["github-issues", "implementation", "pull-request", "workflow", "security", "code-review", "git-worktree", "parallel-development"]
+    },
+    {
+      "name": "dev-team",
+      "source": "./plugins/dev-team",
+      "description": "Multi-agent development team orchestration - planning pipeline (PRD, research, architecture, project plan, issue estimation) and execution pipeline (code-writer, code-reviewer with security-auditor and bug-hunter)",
+      "version": "0.1.0",
+      "author": {
+        "name": "rootwarp",
+        "email": "rootwarp@gmail.com"
+      },
+      "homepage": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+      "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+      "license": "MIT",
+      "keywords": ["team", "agents", "planning", "implementation", "code-review", "security-audit", "bug-hunting", "prd", "architecture"],
+      "category": "project-management",
+      "tags": ["multi-agent", "team-orchestration", "dev-plan", "dev-run", "code-review", "security-audit", "bug-hunter", "tdd", "git-worktree"]
     }
   ]
 }
