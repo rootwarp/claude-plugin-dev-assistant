@@ -12,7 +12,7 @@
       "name": "go",
       "source": "./plugins/go",
       "description": "Go development tools for Claude Code - includes build, test, lint, format, documentation lookup skills and project initialization",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "author": {
         "name": "rootwarp",
         "email": "rootwarp@gmail.com"
