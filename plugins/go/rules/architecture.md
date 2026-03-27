@@ -1,6 +1,6 @@
 # Architecture
 
-Follow [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) and [Hexagonal Architecture](https://alistairhttps://alistair.cockburn.us/hexagonal-architecture/) principles adapted for Go's idiomatic style.
+Follow [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) and [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/) principles adapted for Go's idiomatic style.
 
 ## SOLID Principles
 
