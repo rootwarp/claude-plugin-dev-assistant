@@ -12,7 +12,7 @@
       "name": "go",
       "source": "./plugins/go",
       "description": "Go development tools for Claude Code - includes build, test, lint, format, documentation lookup skills and project initialization",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "author": {
         "name": "rootwarp",
         "email": "rootwarp@gmail.com"
@@ -55,38 +55,6 @@
       "keywords": ["python", "development", "pytest", "ruff", "mypy", "uv", "poetry", "typing", "documentation"],
       "category": "development",
       "tags": ["python", "pytest", "ruff", "mypy", "uv", "tdd", "typing", "linting", "formatting"]
-    },
-    {
-      "name": "dev-planner",
-      "source": "./plugins/dev-planner",
-      "description": "Generate structured development plans from PRD GitHub issues - breaks requirements into parallel sections and sequential tasks with GitHub issue hierarchy",
-      "version": "0.3.0",
-      "author": {
-        "name": "rootwarp",
-        "email": "rootwarp@gmail.com"
-      },
-      "homepage": "https://github.com/rootwarp/claude-plugin-dev-assistant",
-      "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
-      "license": "MIT",
-      "keywords": ["planning", "prd", "github", "issues", "task-management", "project-planning", "requirements"],
-      "category": "project-management",
-      "tags": ["planning", "prd", "github-issues", "task-breakdown", "requirements", "project-management"]
-    },
-    {
-      "name": "implementer",
-      "source": "./plugins/implementer",
-      "description": "End-to-end GitHub issue implementation - from requirements analysis to pull request creation with security review and git worktree support for parallel work",
-      "version": "0.3.0",
-      "author": {
-        "name": "rootwarp",
-        "email": "rootwarp@gmail.com"
-      },
-      "homepage": "https://github.com/rootwarp/claude-plugin-dev-assistant",
-      "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
-      "license": "MIT",
-      "keywords": ["github", "issues", "implementation", "pull-request", "workflow", "security-review", "git-worktree", "parallel"],
-      "category": "project-management",
-      "tags": ["github-issues", "implementation", "pull-request", "workflow", "security", "code-review", "git-worktree", "parallel-development"]
     },
     {
       "name": "dev-team",

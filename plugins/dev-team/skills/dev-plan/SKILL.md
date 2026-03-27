@@ -42,7 +42,7 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
    - Write the PRD with prioritized requirements (P0/P1/P2)
 2. Spawn the **prd-writer** agent via Task tool with `team_name: "dev-plan"` and `subagent_type: "general-purpose"`
    - Assign the prd-writer its tasks via TaskUpdate
-   - The prd-writer should write the PRD to `docs/prd.md` (or ask user for preferred location)
+   - The prd-writer should write the PRD to `plan/prd.md` (or ask user for preferred location)
 3. **Gate: PRD Review** — When complete, present the PRD summary to the user and ask:
    - "Does this PRD capture your requirements? Any changes needed?"
    - If changes needed, send revision tasks to prd-writer
@@ -57,7 +57,7 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
    - Assess feasibility of key technical requirements defined in the PRD
 2. Spawn the **researcher** agent via Task tool with `team_name: "dev-plan"` and `subagent_type: "general-purpose"`
    - Assign the researcher its tasks via TaskUpdate
-   - The researcher should write findings to `docs/research/` (or ask user for preferred location)
+   - The researcher should write findings to `plan/research/` (or ask user for preferred location)
 3. **Gate: Research Review** — When the researcher completes, review the output. Present a summary to the user and ask:
    - "Does this research cover what the PRD needs? Should we investigate anything else?"
    - If yes, send follow-up tasks to the researcher
@@ -70,7 +70,7 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
    - Design the modular system architecture
    - Define module boundaries, interfaces, and data ownership
 2. Spawn the **software-architect** agent via Task tool with `team_name: "dev-plan"`
-   - The architect should write to `docs/architecture.md` (or ask user for preferred location)
+   - The architect should write to `plan/architecture.md` (or ask user for preferred location)
 3. **Gate: Architecture Review** — When complete, present the architecture summary to the user and ask:
    - "Does this architecture align with your vision? Any modules to add, remove, or restructure?"
    - If changes needed, send revision tasks to the architect
@@ -83,7 +83,7 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
    - Plan the overall phases and milestones
    - Define phase dependencies and exit criteria
 2. Spawn the **project-planner** agent via Task tool with `team_name: "dev-plan"`
-   - The planner should write to `docs/project-plan.md` (or ask user for preferred location)
+   - The planner should write to `plan/project-plan.md` (or ask user for preferred location)
 3. **Gate: Plan Review** — When complete, present the plan summary to the user and ask:
    - "Does the phasing make sense? Should any phases be reordered, split, or merged?"
    - If changes needed, send revision tasks to the planner
@@ -94,9 +94,9 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
 1. Create tasks for the issue-estimator agent:
    - Read the PRD, research, architecture, and project plan
    - Break down each phase into parallel, 1-2 day issues
-   - Write issue files per phase to `docs/issues/`
+   - Write issue files per phase to `plan/issues/`
 2. Spawn the **issue-estimator** agent via Task tool with `team_name: "dev-plan"`
-   - The estimator should write to `docs/issues/` with one file per phase plus a summary
+   - The estimator should write to `plan/issues/` with one file per phase plus a summary
 3. **Gate: Estimation Review** — When complete, present the summary to the user and ask:
    - "Are the estimates reasonable? Any issues to split, merge, or reprioritize?"
    - If changes needed, send revision tasks to the estimator
@@ -110,11 +110,11 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
 ## Development Plan Complete
 
 ### Artifacts Produced
-- Research: docs/research/
-- PRD: docs/prd.md
-- Architecture: docs/architecture.md
-- Project Plan: docs/project-plan.md
-- Issues: docs/issues/
+- Research: plan/research/
+- PRD: plan/prd.md
+- Architecture: plan/architecture.md
+- Project Plan: plan/project-plan.md
+- Issues: plan/issues/
 
 ### Summary
 - Phases: N
@@ -137,8 +137,9 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
 
 - **Sequential stages, parallel within stages** — The pipeline flows in order (PRD → research → architecture → plan → issues). Within a stage, spawn agents in parallel if independent work exists.
 - **User gates are mandatory** — Never skip a gate. The user must approve each stage's output before proceeding.
-- **Artifacts must be written to files** — Don't just output to chat. Every stage writes its artifacts to the docs directory so downstream agents can read them.
+- **Artifacts must be written to files** — Don't just output to chat. Every stage writes its artifacts to the plan directory so downstream agents can read them.
 - **Pass context forward** — Each agent reads the output of all previous stages. Make sure artifacts are written before spawning the next agent.
 - **Handle revisions** — If the user requests changes at a gate, send specific revision tasks to the relevant agent. Don't restart the whole pipeline.
+- **Close completed agents** — Once an agent has finished its stage and the user has approved the output, close the agent and do not re-use it. If revisions are needed later, spawn a fresh agent instead of sending messages to a previously completed one. This ensures clean state and avoids context pollution between stages.
 - **Track progress** — Use TaskCreate and TaskUpdate to track the overall pipeline progress. Mark each stage's tasks as completed when approved.
 - **Respect the user's time** — Keep gate summaries concise. Show the key decisions and highlights, not the full document.

@@ -3,7 +3,7 @@ name: dev-run
 description: Development execution pipeline. Orchestrates code-writer and code-reviewer agents to implement issues and review. The code-reviewer acts as review lead, spawning security-auditor and bug-hunter internally for comprehensive review, then merging into develop when all findings are resolved.
 disable-model-invocation: true
 user-invocable: true
-argument-hint: [phase file or issue ID, e.g. "docs/issues/01-phase-1-foundation.md" or "all"]
+argument-hint: [phase file or issue ID, e.g. "plan/issues/01-phase-1-foundation.md" or "all"]
 ---
 
 # Development Execution Pipeline
@@ -25,11 +25,11 @@ You are the engineering team lead. Your job is to drive implementation of develo
 
 1. Read the user's input: `$ARGUMENTS`
    - If a phase file path is provided, read it to get the issue list
-   - If `all` is specified, Glob for `docs/issues/0[1-9]*.md` and `docs/issues/[1-9]*.md` to load all phase files
+   - If `all` is specified, Glob for `plan/issues/0[1-9]*.md` and `plan/issues/[1-9]*.md` to load all phase files
    - If a specific issue ID is given, find it in the phase files
    - If nothing is provided, use AskUserQuestion to ask which phase or issues to implement
 2. Read the issue file(s) and extract the list of issues with their stream assignments, dependencies, and ordering
-3. Read supporting documents — Glob for PRD (`docs/prd.md`), architecture (`docs/architecture.md`), project plan (`docs/project-plan.md`) for context
+3. Read supporting documents — Glob for PRD (`plan/prd.md`), architecture (`plan/architecture.md`), project plan (`plan/project-plan.md`) for context
 4. Create a team using TeamCreate named `dev-run`
 
 ### Stage 2: Plan Execution Order
@@ -258,3 +258,8 @@ These rules are **non-negotiable**. Every piece of code that reaches `develop` m
 - **Dependencies are hard gates** — Never start an issue before its blockers are merged into `develop`.
 - **Track everything** — Use TaskCreate/TaskUpdate for every issue. Mark in_progress when writing, keep in_progress during review cycles, mark completed only after merge.
 - **Pass findings through accurately** — When relaying the code-reviewer's findings to the code-writer for fixes, include the full details (file, line, source tag, suggested fix). Don't summarize away important context.
+
+### Agent Lifecycle Rules
+
+- **Do not re-use completed agents** — Once an agent has finished its task (e.g., a code-writer completes an issue, or a code-reviewer delivers a verdict), close it. Do not send further messages to a completed agent. Always spawn a fresh agent for the next task. This prevents context pollution and stale state from leaking across issues.
+- **Close completed agents immediately** — After an agent reports completion and you have consumed its output, close it. Do not keep agents alive "just in case." If revisions are needed after an agent has been closed, spawn a new agent with the relevant context instead of trying to resume the old one.
