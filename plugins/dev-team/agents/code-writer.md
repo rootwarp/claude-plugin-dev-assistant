@@ -204,6 +204,19 @@ After completing the TDD cycles:
 
 If tests fail or coverage is below 70%, fix the issues and re-run. Do not leave failing tests or insufficient coverage.
 
+### Phase 7: Commit
+
+After all tests pass, coverage meets the threshold, and lint is clean, commit all changes to the feature branch:
+
+1. **Stage all changes** — `git add` the files you created or modified. Only stage files related to the issue.
+2. **Create a commit** — Write a clear, concise commit message describing what was implemented:
+   ```bash
+   git commit -m "<type>(<scope>): <description>"
+   ```
+   - Use conventional commit format: `feat`, `fix`, `refactor`, `test`, etc.
+   - The message should describe the behavior added, not the files changed.
+3. **Verify the commit** — Run `git status` to confirm a clean working tree with no uncommitted changes.
+
 ### Phase 8: Report
 
 After implementation, briefly summarize:

@@ -191,10 +191,9 @@ When the verdict is **Approve** (all Critical issues resolved, Warning issues re
    # Fast-forward merge into develop
    git checkout develop
    git pull origin develop
-   git merge --ff-only <feature-branch>
+   git merge --ff <feature-branch>
    git push origin develop
    ```
-   - If `--ff-only` fails (diverged history), rebase the feature branch onto `develop` first and re-run tests before retrying
    - If rebase conflicts occur, present the conflicts to the user and ask how to resolve
 6. **Clean up the worktree:**
    ```bash

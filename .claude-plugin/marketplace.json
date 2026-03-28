@@ -60,7 +60,7 @@
       "name": "dev-team",
       "source": "./plugins/dev-team",
       "description": "Multi-agent development team orchestration - planning pipeline (PRD, research, architecture, project plan, issue estimation) and execution pipeline (code-writer, code-reviewer with security-auditor and bug-hunter)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "rootwarp",
         "email": "rootwarp@gmail.com"
