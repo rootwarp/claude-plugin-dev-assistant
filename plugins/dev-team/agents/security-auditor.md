@@ -72,7 +72,7 @@ Analyze the code against each category below. For each, read the relevant code c
 
 #### Dependency Vulnerabilities
 
-- **Run dependency audit** — Use Bash to run `npm audit`, `pip audit`, `cargo audit`, `go vuln check`, or equivalent for the project's ecosystem.
+- **Run dependency audit** — Use Bash to run `npm audit`, `pip-audit`, `cargo-audit`, `govulncheck`, or equivalent for the project's ecosystem.
 - **Outdated dependencies** — Are there known CVEs in current dependency versions?
 - **Unused dependencies** — Extra dependencies increase attack surface unnecessarily.
 

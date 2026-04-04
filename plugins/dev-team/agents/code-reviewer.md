@@ -161,7 +161,16 @@ If the verdict is **Request changes**:
    - Present remaining issues to the user
    - Ask: "These findings persist after 3 review cycles. Should we continue, merge anyway, or abort?"
 
-### Phase 7: Merge into Develop
+### Phase 7: Simplify
+
+After all review findings are resolved and before merging, run `/simplify` to enhance code quality:
+
+1. **Run `/simplify`** — This reviews the changed code for reuse opportunities, quality improvements, and efficiency gains, then applies fixes automatically.
+2. **Verify the simplifications** — Read the diff produced by `/simplify` and confirm the changes are correct and don't alter behavior.
+3. **Re-run tests** — Ensure the simplified code still passes the test suite.
+4. If `/simplify` introduced any issues, revert and proceed to merge without simplification.
+
+### Phase 8: Merge into Develop
 
 When the verdict is **Approve** (all Critical issues resolved, Warning issues resolved or acknowledged):
 
