@@ -1,6 +1,6 @@
-# claude-plugin-dev-assistant
+# claude-code-plugins
 
-A collection of Claude Code plugins for Go, Rust, and Python development.
+A collection of Claude Code plugins for Go, Rust, Python development and multi-agent team orchestration.
 
 ## Installation
 
@@ -8,9 +8,10 @@ A collection of Claude Code plugins for Go, Rust, and Python development.
 
 ```bash
 # Install specific plugin
-/plugin install rootwarp/claude-plugin-dev-assistant/plugins/go
-/plugin install rootwarp/claude-plugin-dev-assistant/plugins/rust
-/plugin install rootwarp/claude-plugin-dev-assistant/plugins/python
+/plugin install rootwarp/claude-code-plugins/plugins/go
+/plugin install rootwarp/claude-code-plugins/plugins/rust
+/plugin install rootwarp/claude-code-plugins/plugins/python
+/plugin install rootwarp/claude-code-plugins/plugins/dev-team
 ```
 
 ### Local Development
@@ -19,6 +20,7 @@ A collection of Claude Code plugins for Go, Rust, and Python development.
 claude --plugin-dir ./plugins/go
 claude --plugin-dir ./plugins/rust
 claude --plugin-dir ./plugins/python
+claude --plugin-dir ./plugins/dev-team
 ```
 
 ## Available Plugins
@@ -174,54 +176,71 @@ claude --plugin-dir ./plugins/python
 
 </details>
 
-## MCP Servers
+### Dev-Team Plugin
 
-Each plugin includes a GitHub MCP server for enhanced GitHub integration.
+Multi-agent development team orchestration with planning and execution pipelines.
 
-### Setup
+| Skill | Description |
+|-------|-------------|
+| `/dev-plan` | Full planning pipeline: PRD, research, architecture, project plan, and issue estimation |
+| `/dev-run` | Execution pipeline: implement issues via code-writer with code-reviewer quality gates |
 
-Set your GitHub Personal Access Token:
+#### Agents
 
-```bash
-export GITHUB_PERSONAL_ACCESS_TOKEN=your_token_here
-```
+| Agent | Role |
+|-------|------|
+| `prd-writer` | Gather requirements and write Product Requirements Documents |
+| `researcher` | Investigate technologies, landscape, feasibility, and best practices |
+| `software-architect` | Design modular system architecture with clear boundaries and interfaces |
+| `project-planner` | Plan phases, milestones, and dependencies |
+| `issue-estimator` | Break down plans into parallel, sprint-ready issues |
+| `code-writer` | Implement issues via TDD in isolated git worktrees |
+| `code-reviewer` | Review lead: code quality + orchestrates security and bug review + merges |
+| `security-auditor` | Scan for vulnerabilities and OWASP issues |
+| `bug-hunter` | Find potential bugs, edge cases, and race conditions |
 
-### Capabilities
-
-- Repository search and browsing
-- Issue and PR management
-- File content retrieval
-- Commit history access
-
-## LSP Configuration
-
-Each plugin includes language-specific LSP configuration:
-
-| Plugin | LSP Server | Features |
-|--------|------------|----------|
-| Go | `gopls` | staticcheck, gofumpt, inlay hints |
-| Rust | `rust-analyzer` | clippy on save, proc macros, inlay hints |
-| Python | `pyright` | strict type checking, inlay hints |
-
-### LSP Installation
+<details>
+<summary>Usage Examples</summary>
 
 ```bash
-# Go
-go install golang.org/x/tools/gopls@latest
+# Plan a new project from an idea
+/dev-plan Build a REST API for task management with user auth
 
-# Rust
-rustup component add rust-analyzer
+# Implement all issues from a phase
+/dev-run plan/issues/01-phase-1-foundation.md
 
-# Python
-uv add --dev pyright
-# or: npm install -g pyright
+# Implement all planned issues
+/dev-run all
 ```
+
+#### `/dev-plan` Pipeline
+
+1. **Kickoff** - Clarify requirements and constraints
+2. **PRD** - `prd-writer` drafts the Product Requirements Document
+3. **Research** - `researcher` investigates technologies and feasibility
+4. **Architecture** - `software-architect` designs the system
+5. **Project Plan** - `project-planner` defines phases and milestones
+6. **Issue Estimation** - `issue-estimator` breaks down into sprint-ready issues
+
+Each stage requires user approval before proceeding.
+
+#### `/dev-run` Pipeline
+
+1. **Load Issues** - Parse phase files and build execution queues
+2. **Write** - `code-writer` implements each issue in an isolated worktree
+3. **Pre-Review Gate** - Coverage >= 70%, tests passing, lint clean
+4. **Review** - `code-reviewer` runs quality, security, and bug review
+5. **Fix Cycle** - Up to 3 iterations to resolve findings
+6. **Merge** - Fast-forward merge into `develop` after approval
+
+</details>
 
 ## Rules
 
-Each plugin includes `CLAUDE.md` with language-specific rules:
+Each language plugin includes `CLAUDE.md` with language-specific rules:
 
 - **Code Style** - Language conventions, formatting, naming
+- **Concurrency** - Concurrent programming patterns and safety
 - **Project Layout** - Standard directory structure
 - **TDD** - Test-Driven Development workflow
 - **Security** - Input validation, secrets management
@@ -231,26 +250,35 @@ Each plugin includes `CLAUDE.md` with language-specific rules:
 
 ```
 plugins/
+├── dev-team/
+│   ├── .claude-plugin/plugin.json
+│   ├── agents/
+│   │   ├── bug-hunter.md
+│   │   ├── code-reviewer.md
+│   │   ├── code-writer.md
+│   │   ├── issue-estimator.md
+│   │   ├── prd-writer.md
+│   │   ├── project-planner.md
+│   │   ├── researcher.md
+│   │   ├── security-auditor.md
+│   │   └── software-architect.md
+│   └── skills/
+│       ├── dev-plan/
+│       └── dev-run/
 ├── go/
 │   ├── .claude-plugin/plugin.json
-│   ├── .lsp.json              # gopls config
-│   ├── .mcp.json              # GitHub MCP
 │   ├── CLAUDE.md
 │   ├── commands/golang/
 │   ├── rules/
 │   └── skills/
 ├── rust/
 │   ├── .claude-plugin/plugin.json
-│   ├── .lsp.json              # rust-analyzer config
-│   ├── .mcp.json              # GitHub MCP
 │   ├── CLAUDE.md
 │   ├── commands/rust/
 │   ├── rules/
 │   └── skills/
 └── python/
     ├── .claude-plugin/plugin.json
-    ├── .lsp.json              # pyright config
-    ├── .mcp.json              # GitHub MCP
     ├── CLAUDE.md
     ├── commands/python/
     ├── rules/
