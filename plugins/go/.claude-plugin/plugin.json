@@ -7,7 +7,7 @@
     "email": "rootwarp@gmail.com",
     "url": "https://github.com/rootwarp"
   },
-  "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+  "repository": "https://github.com/rootwarp/claude-code-plugins-monorepo",
   "license": "MIT",
   "keywords": ["go", "golang", "development", "build", "test", "lint", "project-init", "documentation", "godoc"]
 }

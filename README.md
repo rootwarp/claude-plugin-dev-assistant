@@ -1,4 +1,4 @@
-# claude-code-plugins
+# claude-code-plugins-monorepo
 
 A collection of Claude Code plugins for Go, Rust, Python development and multi-agent team orchestration.
 
@@ -8,10 +8,10 @@ A collection of Claude Code plugins for Go, Rust, Python development and multi-a
 
 ```bash
 # Install specific plugin
-/plugin install rootwarp/claude-code-plugins/plugins/go
-/plugin install rootwarp/claude-code-plugins/plugins/rust
-/plugin install rootwarp/claude-code-plugins/plugins/python
-/plugin install rootwarp/claude-code-plugins/plugins/dev-team
+/plugin install rootwarp/claude-code-plugins-monorepo/plugins/go
+/plugin install rootwarp/claude-code-plugins-monorepo/plugins/rust
+/plugin install rootwarp/claude-code-plugins-monorepo/plugins/python
+/plugin install rootwarp/claude-code-plugins-monorepo/plugins/dev-team
 ```
 
 ### Local Development

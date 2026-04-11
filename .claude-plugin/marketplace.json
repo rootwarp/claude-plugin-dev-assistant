@@ -1,5 +1,5 @@
 {
-  "name": "claude-plugin-dev-assistant",
+  "name": "claude-code-plugins-monorepo",
   "owner": {
     "name": "Joonkyo Kim",
     "email": "rootwarp@gmail.com"
@@ -17,8 +17,8 @@
         "name": "rootwarp",
         "email": "rootwarp@gmail.com"
       },
-      "homepage": "https://github.com/rootwarp/claude-plugin-dev-assistant",
-      "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+      "homepage": "https://github.com/rootwarp/claude-code-plugins-monorepo",
+      "repository": "https://github.com/rootwarp/claude-code-plugins-monorepo",
       "license": "MIT",
       "keywords": ["go", "golang", "development", "build", "test", "lint", "project-init", "documentation", "godoc"],
       "category": "development",
@@ -33,8 +33,8 @@
         "name": "rootwarp",
         "email": "rootwarp@gmail.com"
       },
-      "homepage": "https://github.com/rootwarp/claude-plugin-dev-assistant",
-      "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+      "homepage": "https://github.com/rootwarp/claude-code-plugins-monorepo",
+      "repository": "https://github.com/rootwarp/claude-code-plugins-monorepo",
       "license": "MIT",
       "keywords": ["rust", "rustlang", "cargo", "development", "build", "test", "clippy", "rustfmt", "documentation"],
       "category": "development",
@@ -49,8 +49,8 @@
         "name": "rootwarp",
         "email": "rootwarp@gmail.com"
       },
-      "homepage": "https://github.com/rootwarp/claude-plugin-dev-assistant",
-      "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+      "homepage": "https://github.com/rootwarp/claude-code-plugins-monorepo",
+      "repository": "https://github.com/rootwarp/claude-code-plugins-monorepo",
       "license": "MIT",
       "keywords": ["python", "development", "pytest", "ruff", "mypy", "uv", "poetry", "typing", "documentation"],
       "category": "development",
@@ -65,8 +65,8 @@
         "name": "rootwarp",
         "email": "rootwarp@gmail.com"
       },
-      "homepage": "https://github.com/rootwarp/claude-plugin-dev-assistant",
-      "repository": "https://github.com/rootwarp/claude-plugin-dev-assistant",
+      "homepage": "https://github.com/rootwarp/claude-code-plugins-monorepo",
+      "repository": "https://github.com/rootwarp/claude-code-plugins-monorepo",
       "license": "MIT",
       "keywords": ["team", "agents", "planning", "implementation", "code-review", "security-audit", "bug-hunting", "prd", "architecture"],
       "category": "project-management",
