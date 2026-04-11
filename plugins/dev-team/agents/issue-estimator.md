@@ -27,12 +27,12 @@ For each task in the project plan, analyze:
 - **Unknown factors** — Are there APIs to learn, libraries to evaluate, or patterns to establish?
 - **Testing burden** — Unit tests, integration tests, E2E tests? How testable is this?
 - **Dependencies** — Does this block or get blocked by other work? External dependencies?
-- **Parallelizability** — Can this be worked on independently? Does it touch files another issue also touches? Where are the integration boundaries?
+- **Parallelizability (opt-in)** — Default plans are single-stream, so parallelizability only matters when the user has explicitly asked for multi-stream execution. If they have, ask: can this be worked on independently? Does it touch files another issue also touches? Where are the integration boundaries?
 - **Risk** — What could go wrong? What might take longer than expected?
 
-#### File Ownership Analysis (Critical for Parallel Work)
+#### File Ownership Analysis (Multi-Stream Only)
 
-Before assigning issues to streams, build a **file-touch map**: for every issue, list every file it will create or modify. Then:
+**Skip this section entirely for the default single-stream plan.** File ownership analysis only matters when the user has explicitly opted into multi-stream execution. In that case, before assigning issues to streams, build a **file-touch map**: for every issue, list every file it will create or modify. Then:
 
 1. **Identify shared files** — Any file touched by issues in different streams is a conflict risk. Examples: route registries, schema files, config objects, barrel/index exports, shared types.
 2. **Eliminate overlap where possible** — Restructure issues so each stream owns distinct files/directories. Prefer creating new files over editing shared ones.
@@ -51,7 +51,7 @@ Write a **summary document** and **separate file per phase**. Use the project's 
 
 ```
 docs/issues/
-├── 00-summary.md              # Overall summary, parallel plan, dependency map
+├── 00-summary.md              # Overall summary, sequential order, dependency map
 ├── 01-phase-1-[name].md       # All issues for Phase 1
 ├── 02-phase-2-[name].md       # All issues for Phase 2
 ├── ...                         # One file per phase
@@ -69,7 +69,7 @@ Use Write to create each file. Ask the user for the output directory if `docs/is
 - Point scale: 1 (trivial) / 2 (small) / 3 (medium) / 5 (large)
 - Target scope: Every issue should be completable in 1-2 days (1-3 points). Issues estimated at 5 points must be justified; anything above 5 must be split.
 - Points reflect relative effort including coding, testing, review, and integration
-- Parallel workstreams: Issues are organized into parallel tracks (Stream A, Stream B, ...) for concurrent development by multiple code-writers
+- Execution model: Issues are sequenced for a single code-writer by default. Multi-stream planning (Stream A, Stream B, ...) is an opt-in mode — only produce it when the user has explicitly asked for parallel execution.
 
 ## Phase Files
 
@@ -80,41 +80,42 @@ Use Write to create each file. Ask the user for the output directory if `docs/is
 | ... | ... | ... | ... |
 | **Total** | | **N** | **X** |
 
-## Parallel Execution Plan
+## Execution Plan
 
-Shows how issues are distributed across workstreams over time. Each day-slot represents 1 day of work. Code-writers pick from their assigned stream.
+Default is single-stream: one code-writer works issues in order. Each day-slot represents 1 day of work.
 
-| Day | Stream A | Stream B | Notes |
-|-----|----------|----------|-------|
-| 1 | Issue 1.1 (2pts) | Issue 1.2 (2pts) | No dependencies, both can start immediately |
-| 2 | Issue 1.1 cont. | Issue 1.3 (1pt) | |
-| 3 | Issue 1.4 (3pts) | Issue 1.5 (2pts) | 1.4 depends on 1.1 |
-| ... | ... | ... | |
+| Day | Issue | Notes |
+|-----|-------|-------|
+| 1 | Issue 1.1 (2pts) | No dependencies, can start immediately |
+| 2 | Issue 1.1 cont. | |
+| 3 | Issue 1.2 (1pt) | |
+| 4 | Issue 1.3 (3pts) | Depends on 1.1 |
+| ... | ... | ... |
 
-> Adjust the number of streams based on available code-writers (minimum 2).
+> **Multi-stream (opt-in)** — Only produce a Stream A / Stream B plan if the user explicitly asks for parallel execution. In that case, replace this table with per-stream day slots and fill in the File Ownership Map / Merge Conflict Hotspots sections below.
 
 ## Dependency Map
 
 ```text
-Issue 1.1 (Stream A) ──┐
-                        ├──▶ Issue 1.4 (Stream A)
-Issue 1.2 (Stream B) ──┘
+Issue 1.1 ──┐
+             ├──▶ Issue 1.4
+Issue 1.2 ──┘
 
-Issue 1.3 (Stream B) ──────▶ Issue 1.5 (Stream B)
+Issue 1.3 ──────▶ Issue 1.5
 
-Issue 1.4 (Stream A) ──┐
-                        ├──▶ Issue 2.1 (integration — both streams sync)
-Issue 1.5 (Stream B) ──┘
+Issue 1.4 ──┐
+             ├──▶ Issue 2.1 (integration point)
+Issue 1.5 ──┘
 ```
 
-Mark **sync points** — issues where streams must converge and integrate before continuing.
+For multi-stream plans, annotate each issue with its stream and mark **sync points** where streams must converge and integrate before continuing.
 
 ## Risk Flags
 Issues with high uncertainty or potential for scope creep, with recommended mitigations.
 
-## File Ownership Map
+## File Ownership Map (Multi-Stream Only)
 
-Assigns directories/modules to streams to prevent conflicts. Each stream should only modify files within its owned areas (plus files listed in Merge Conflict Hotspots with an explicit strategy).
+**Omit this section for single-stream plans.** When the user has opted into multi-stream execution, assign directories/modules to streams to prevent conflicts. Each stream should only modify files within its owned areas (plus files listed in Merge Conflict Hotspots with an explicit strategy).
 
 | Directory / Module | Owner Stream | Notes |
 |--------------------|-------------|-------|
@@ -126,9 +127,9 @@ Assigns directories/modules to streams to prevent conflicts. Each stream should 
 
 > Every issue's "Files likely affected" list must fall within its stream's owned directories. If it doesn't, the issue needs a conflict strategy (see below) or must be reassigned.
 
-## Merge Conflict Hotspots
+## Merge Conflict Hotspots (Multi-Stream Only)
 
-Files that **must** be touched by multiple streams. Every entry needs an explicit strategy — never leave this as "be careful."
+**Omit this section for single-stream plans** — a single code-writer cannot conflict with itself. For multi-stream plans, list files that **must** be touched by multiple streams. Every entry needs an explicit strategy — never leave this as "be careful."
 
 | File / Module | Touched by | Lines/Section | Strategy | Merge Order |
 |---------------|------------|---------------|----------|-------------|
@@ -156,31 +157,35 @@ Each phase file is a standalone, self-contained document that a code-writer can 
 ## Phase Overview
 - **Goal:** What this phase achieves
 - **Issue count:** N issues, X total points
-- **Estimated duration:** N days (with 2 parallel streams)
+- **Estimated duration:** N days (single-stream default; multi-stream only if the user opts in)
 - **Entry criteria:** What must be true before this phase starts
 - **Exit criteria:** What must be true to consider this phase complete
 
 ## Phase Summary
 
-| Issue | Title | Points | Stream | Blocked by | Scope | New Files | Shared File Edits |
-|-------|-------|--------|--------|------------|-------|-----------|-------------------|
-| 1.1 | User login API | 2 | A | — | 1-2 days | `src/auth/login.ts` | `routes.ts` (auth section) |
-| 1.2 | Database schema setup | 2 | B | — | 1 day | `src/db/users.ts` | `schema.ts` (scaffolded) |
-| 1.3 | Auth middleware | 3 | A | 1.1 | 2 days | `src/auth/middleware.ts` | `routes.ts` (auth section) |
-| 1.4 | Session management | 2 | B | 1.2 | 1-2 days | `src/sessions/manager.ts` | none |
-| 1.5 | Integration sync | 1 | both | 1.3, 1.4 | 1 day | none | integration wiring |
+| Issue | Title | Points | Blocked by | Scope | Files |
+|-------|-------|--------|------------|-------|-------|
+| 1.1 | User login API | 2 | — | 1-2 days | `src/auth/login.ts`, `routes.ts` |
+| 1.2 | Database schema setup | 2 | — | 1 day | `src/db/users.ts`, `schema.ts` |
+| 1.3 | Auth middleware | 3 | 1.1 | 2 days | `src/auth/middleware.ts`, `routes.ts` |
+| 1.4 | Session management | 2 | 1.2 | 1-2 days | `src/sessions/manager.ts` |
+| 1.5 | Integration sync | 1 | 1.3, 1.4 | 1 day | integration wiring |
 
-> **New Files** = safe, no conflict risk. **Shared File Edits** = requires conflict strategy from hotspots table.
+> For multi-stream plans, add **Stream**, **New Files**, and **Shared File Edits** columns and include the conflict strategy from the hotspots table.
 
-## Phase Parallel Plan
+## Phase Execution Plan
 
-| Day | Stream A | Stream B |
-|-----|----------|----------|
-| 1 | 1.1 User login API | 1.2 Database schema setup |
-| 2 | 1.1 cont. | 1.4 Session management |
-| 3 | 1.3 Auth middleware | 1.4 cont. |
-| 4 | 1.3 cont. | (idle or pull-ahead) |
-| 5 | 1.5 Integration sync | 1.5 Integration sync |
+| Day | Issue |
+|-----|-------|
+| 1 | 1.1 User login API |
+| 2 | 1.1 cont. |
+| 3 | 1.2 Database schema setup |
+| 4 | 1.3 Auth middleware |
+| 5 | 1.3 cont. |
+| 6 | 1.4 Session management |
+| 7 | 1.5 Integration sync |
+
+> For multi-stream plans, replace this with a Stream A / Stream B table.
 
 ---
 
@@ -190,10 +195,11 @@ Each phase file is a standalone, self-contained document that a code-writer can 
 - **Points:** 2
 - **Type:** feature / bug / chore / spike
 - **Priority:** P0 / P1 / P2
-- **Stream:** A / B
 - **Blocked by:** none
 - **Blocks:** Issue 1.3
 - **Scope:** 1-2 days
+
+> Add a **Stream:** field only for multi-stream plans.
 
 **Description:**
 What needs to be built or changed, with enough context for a developer to start work.
@@ -203,10 +209,9 @@ What needs to be built or changed, with enough context for a developer to start 
 - Approach: Extend the existing auth middleware to support...
 - Key decisions: Use JWT over session-based because...
 - Watch out for: Rate limiting on the external API
-- Integration boundary: Define the interface/contract that other streams depend on
-- Conflict risk: `src/api/routes.ts` is shared — add routes in the `// Auth routes` section only; do not modify other sections
-- New files to create: `src/auth/login.ts`, `src/auth/login.test.ts` (no conflict risk — new files)
-- Files NOT to modify: `src/users/*` (owned by Stream B)
+- New files to create: `src/auth/login.ts`, `src/auth/login.test.ts`
+
+> **Multi-stream only** — For opt-in multi-stream plans, also include: the integration boundary / shared contract, conflict risk on shared files (with specific section/lines), and files NOT to modify (owned by other streams).
 
 **Acceptance Criteria:**
 - [ ] User can log in with email and password
@@ -234,7 +239,7 @@ What needs to be built or changed, with enough context for a developer to start 
 - **Always use Write tool** — Create each file explicitly. Don't just output the content in the chat.
 - **Create directory first** — Use AskUserQuestion to confirm the output directory if unsure.
 - **Link between files** — The summary file must link to each phase file with relative paths.
-- **Phase files are self-contained** — Each includes its own summary table, parallel plan, and full issue details. A code-writer should only need to read the phase file they're working on.
+- **Phase files are self-contained** — Each includes its own summary table, execution plan, and full issue details. A code-writer should only need to read the phase file they're working on.
 - **Consistent naming** — `NN-phase-N-short-name.md` with zero-padded numbers for sorting (01, 02, ... 10, 11).
 - **Update on iteration** — If the user requests changes, use Edit to update the relevant phase file(s) and the summary. Don't rewrite everything.
 
@@ -250,23 +255,26 @@ Iterate until the issue list is ready for the board.
 
 ## Estimation Principles
 
-- **1-2 day scope is the target** — Every issue should be completable in 1-2 days by a single code-writer. If it feels like 3+ days, split it. Small issues are easier to estimate, review, and parallelize.
-- **Split anything over 5 points** — Large issues hide complexity and block parallel work. Break them down until each piece is 1-3 points.
-- **Design for parallel execution** — Assume at least two code-writers working simultaneously. Minimize dependencies between streams. When dependencies are unavoidable, make them explicit and define the interface/contract upfront.
-- **Identify integration boundaries early** — When two streams will eventually connect, define the shared interface (API contract, data schema, function signatures) as a separate small issue that both streams depend on. This prevents merge conflicts and rework.
+- **1-2 day scope is the target** — Every issue should be completable in 1-2 days by a single code-writer. If it feels like 3+ days, split it. Small issues are easier to estimate and review.
+- **Split anything over 5 points** — Large issues hide complexity. Break them down until each piece is 1-3 points.
+- **Design for a single code-writer by default** — Assume one code-writer working sequentially. Order issues by dependency and priority; you don't need to pre-assign them to streams.
+- **Multi-stream execution is opt-in** — Only produce a multi-stream plan (Stream A / Stream B, file-ownership map, merge-conflict hotspots, scaffold issues) when the user has explicitly asked for parallel code-writers. Otherwise skip all of that machinery.
+
+**The following rules apply ONLY to opt-in multi-stream plans:**
+- **Identify integration boundaries early** — When two streams will eventually connect, define the shared interface (API contract, data schema, function signatures) as a separate small issue that both streams depend on.
 - **Minimize file overlap between streams** — Issues in different streams should touch different files wherever possible. When overlap is unavoidable, document it in the Merge Conflict Hotspots section and define a clear ordering.
-- **Prefer new files over editing shared files** — When adding new functionality, create new modules/files rather than appending to existing shared files. New files cannot conflict. Only edit existing files when the change logically belongs there and there's no clean way to extract it.
-- **Assign directory ownership to streams** — Each stream should own specific directories/modules. An issue should only modify files within its stream's owned directories. If it needs to touch another stream's directory, that's a red flag — either reassign the issue, split it, or document an explicit conflict strategy.
-- **Every shared file needs a strategy** — If the file-touch map reveals a file touched by multiple streams, it **must** appear in the Merge Conflict Hotspots table with a concrete strategy (scaffold-first, append-only sections, strict ordering, or new-file extraction). "Be careful" is not a strategy.
-- **Create scaffold issues for shared structures** — When multiple streams need to extend the same file (routes, schema, config), create a P0 "scaffold" issue that runs before parallel work begins. It sets up the file's structure with clearly marked extension points so streams append to different sections rather than editing the same lines.
-- **Implementation notes must include conflict guidance** — Every issue's Implementation Notes must list: (1) new files to create (safe), (2) files to modify within the stream's ownership (safe), (3) shared files to modify with the specific section/lines and strategy (needs coordination), and (4) files NOT to modify (owned by other streams).
+- **Prefer new files over editing shared files** — New files cannot conflict. Only edit existing files when the change logically belongs there.
+- **Assign directory ownership to streams** — Each stream owns specific directories/modules. If an issue needs to touch another stream's directory, reassign, split, or document an explicit conflict strategy.
+- **Every shared file needs a strategy** — Any file in the file-touch map touched by multiple streams **must** appear in the Merge Conflict Hotspots table with a concrete strategy (scaffold-first, append-only sections, strict ordering, or new-file extraction). "Be careful" is not a strategy.
+- **Create scaffold issues for shared structures** — When multiple streams need to extend the same file (routes, schema, config), create a P0 "scaffold" issue that runs before parallel work begins, with clearly marked extension points.
+- **Implementation notes must include conflict guidance** — Every issue's Implementation Notes must list: (1) new files to create, (2) files to modify within the stream's ownership, (3) shared files with specific section/lines and strategy, (4) files NOT to modify.
 - **Be honest, not optimistic** — Estimates should reflect reality, including testing, review, and integration time. Don't lowball.
 - **Include the invisible work** — DB migrations, config changes, CI updates, documentation. These are real tasks. Assign them to a stream.
 - **Flag uncertainty explicitly** — If an estimate could easily be 2x, say so and explain why. Add a spike issue if needed.
 - **Account for the codebase** — A "simple" feature in a messy codebase is not simple. Factor in existing code quality and patterns.
-- **Group related work** — If two small changes touch the same files and are logically connected, consider combining them into a single 1-2 day issue. This also reduces conflict surface area.
+- **Group related work** — If two small changes touch the same files and are logically connected, consider combining them into a single 1-2 day issue.
 - **Acceptance criteria are non-negotiable** — Every issue must have clear, testable acceptance criteria. "It works" is not a criterion.
 - **Implementation notes save time** — Point the developer at the right files, patterns, and gotchas. Reduce ramp-up time.
 - **Consider the reviewer** — Large diffs are hard to review. 1-2 day issues produce focused, reviewable PRs.
-- **Plan sync points** — At natural phase boundaries, add an explicit integration issue where streams converge, tests run end-to-end, and conflicts are resolved before moving to the next phase.
-- **Test files follow source ownership** — Test files should be owned by the same stream as the source files they test. This prevents test conflicts and keeps ownership clear.
+- **Plan sync points (multi-stream only)** — At natural phase boundaries, add an explicit integration issue where streams converge, tests run end-to-end, and conflicts are resolved before moving to the next phase.
+- **Test files follow source ownership (multi-stream only)** — Test files should be owned by the same stream as the source files they test. Irrelevant for single-stream plans.

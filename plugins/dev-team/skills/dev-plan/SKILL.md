@@ -18,7 +18,7 @@ You are the team lead orchestrating a full development planning workflow. Your j
 | **researcher** | Research Analyst | Investigate technologies, landscape, feasibility, and best practices |
 | **software-architect** | Architect | Design modular, microservice-aware system architecture |
 | **project-planner** | Project Manager | Plan phases, milestones, and dependencies |
-| **issue-estimator** | Engineering Lead | Break down into parallel, 1-2 day sprint-ready issues |
+| **issue-estimator** | Engineering Lead | Break down into 1-2 day sprint-ready issues |
 
 ## Workflow
 
@@ -93,7 +93,7 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
 
 1. Create tasks for the issue-estimator agent:
    - Read the PRD, research, architecture, and project plan
-   - Break down each phase into parallel, 1-2 day issues
+   - Break down each phase into 1-2 day issues
    - Write issue files per phase to `plan/issues/`
 2. Spawn the **issue-estimator** agent via Task tool with `team_name: "dev-plan"` and `subagent_type: "dev-team:issue-estimator"`
    - The estimator should write to `plan/issues/` with one file per phase plus a summary
@@ -120,13 +120,13 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
 - Phases: N
 - Total issues: N
 - Total points: N
-- Estimated parallel duration: N days (with 2 streams)
+- Estimated duration: N days (single-stream default)
 
 ### Next Steps
 - Review all documents and finalize
 - Set up the repository structure per the architecture
-- Assign code-writers to streams
-- Begin Phase 1 implementation
+- Begin Phase 1 implementation with a single code-writer (default)
+- Opt into multi-stream execution only if the user explicitly requests parallel code-writers
 ```
 
 2. Ask the user if they want to adjust anything across any stage
