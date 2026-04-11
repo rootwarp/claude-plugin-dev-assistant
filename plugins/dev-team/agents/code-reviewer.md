@@ -29,12 +29,12 @@ While you perform your own review (Phase 4), spawn **bug-hunter** and **security
 
 1. **Spawn both agents in parallel** (in a single message with multiple Task tool calls):
 
-   - **bug-hunter** via Task tool with `subagent_type: "general-purpose"`:
+   - **bug-hunter** via Task tool with `subagent_type: "dev-team:bug-hunter"`:
      - Provide: the worktree path or branch name, the diff, the issue description
      - Ask it to focus on the changed/added files
      - It will return a bug report with findings categorized by severity
 
-   - **security-auditor** via Task tool with `subagent_type: "general-purpose"`:
+   - **security-auditor** via Task tool with `subagent_type: "dev-team:security-auditor"`:
      - Provide: the worktree path or branch name, the diff, the issue description
      - Ask it to focus on the changed/added files
      - It will return a security audit report with findings and OWASP references

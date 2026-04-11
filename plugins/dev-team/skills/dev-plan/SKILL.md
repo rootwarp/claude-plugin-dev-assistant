@@ -40,7 +40,7 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
    - Gather requirements from the user via clarifying questions
    - Define the problem, target users, and success metrics
    - Write the PRD with prioritized requirements (P0/P1/P2)
-2. Spawn the **prd-writer** agent via Task tool with `team_name: "dev-plan"` and `subagent_type: "general-purpose"`
+2. Spawn the **prd-writer** agent via Task tool with `team_name: "dev-plan"` and `subagent_type: "dev-team:prd-writer"`
    - Assign the prd-writer its tasks via TaskUpdate
    - The prd-writer should write the PRD to `plan/prd.md` (or ask user for preferred location)
 3. **Gate: PRD Review** — When complete, present the PRD summary to the user and ask:
@@ -55,7 +55,7 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
    - Research the relevant technologies, libraries, and approaches to fulfill the PRD
    - Investigate competitive landscape or prior art if applicable
    - Assess feasibility of key technical requirements defined in the PRD
-2. Spawn the **researcher** agent via Task tool with `team_name: "dev-plan"` and `subagent_type: "general-purpose"`
+2. Spawn the **researcher** agent via Task tool with `team_name: "dev-plan"` and `subagent_type: "dev-team:researcher"`
    - Assign the researcher its tasks via TaskUpdate
    - The researcher should write findings to `plan/research/` (or ask user for preferred location)
 3. **Gate: Research Review** — When the researcher completes, review the output. Present a summary to the user and ask:
@@ -69,7 +69,7 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
    - Read the PRD from Stage 2 and research materials from Stage 3
    - Design the modular system architecture
    - Define module boundaries, interfaces, and data ownership
-2. Spawn the **software-architect** agent via Task tool with `team_name: "dev-plan"`
+2. Spawn the **software-architect** agent via Task tool with `team_name: "dev-plan"` and `subagent_type: "dev-team:software-architect"`
    - The architect should write to `plan/architecture.md` (or ask user for preferred location)
 3. **Gate: Architecture Review** — When complete, present the architecture summary to the user and ask:
    - "Does this architecture align with your vision? Any modules to add, remove, or restructure?"
@@ -82,7 +82,7 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
    - Read the PRD, research, and architecture documents
    - Plan the overall phases and milestones
    - Define phase dependencies and exit criteria
-2. Spawn the **project-planner** agent via Task tool with `team_name: "dev-plan"`
+2. Spawn the **project-planner** agent via Task tool with `team_name: "dev-plan"` and `subagent_type: "dev-team:project-planner"`
    - The planner should write to `plan/project-plan.md` (or ask user for preferred location)
 3. **Gate: Plan Review** — When complete, present the plan summary to the user and ask:
    - "Does the phasing make sense? Should any phases be reordered, split, or merged?"
@@ -95,7 +95,7 @@ Execute the following pipeline. Each stage produces artifacts that feed into the
    - Read the PRD, research, architecture, and project plan
    - Break down each phase into parallel, 1-2 day issues
    - Write issue files per phase to `plan/issues/`
-2. Spawn the **issue-estimator** agent via Task tool with `team_name: "dev-plan"`
+2. Spawn the **issue-estimator** agent via Task tool with `team_name: "dev-plan"` and `subagent_type: "dev-team:issue-estimator"`
    - The estimator should write to `plan/issues/` with one file per phase plus a summary
 3. **Gate: Estimation Review** — When complete, present the summary to the user and ask:
    - "Are the estimates reasonable? Any issues to split, merge, or reprioritize?"

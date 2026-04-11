@@ -52,7 +52,7 @@ For each issue in the execution queue, run the **Write → Pre-Review Gate → R
 
 #### Step 1: Write
 
-1. Spawn a **code-writer** agent via Task tool with `team_name: "dev-run"`
+1. Spawn a **code-writer** agent via Task tool with `team_name: "dev-run"` and `subagent_type: "dev-team:code-writer"`
 2. Assign the current issue via TaskUpdate and send the issue details via SendMessage:
    - Issue description, acceptance criteria, implementation notes
    - Paths to PRD, architecture, and plan for context
@@ -97,7 +97,7 @@ Once the pre-review gate passes, hand off to the **code-reviewer**. The code-rev
    - Review the diff for quality, patterns, correctness, security, and bugs
    - Merge into `develop` when all findings are resolved
 
-2. **Spawn the code-reviewer** agent via Task tool with `team_name: "dev-run"`:
+2. **Spawn the code-reviewer** agent via Task tool with `team_name: "dev-run"` and `subagent_type: "dev-team:code-reviewer"`:
    - Send: the worktree path, branch name, issue description, acceptance criteria
    - Send: the pre-review gate results (coverage %, test count, lint status)
    - The code-reviewer will internally:
